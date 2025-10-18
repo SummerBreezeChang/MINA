@@ -21,8 +21,9 @@ export default function HeroContent() {
         </h1>
 
         <p className="text-xs font-light text-white/70 mb-4 leading-relaxed">
-          Mina finds, compares, and recommends the best products for your business. Tell her what you need, and she'll
-          deliver curated options ranked by price, quality, and fit — fast, smart, and beautifully simple.
+          {
+            "Mina finds, compares, and recommends the best products for your business. Tell her what you need, and she'll deliver curated options ranked by price, quality, and fit — fast, smart, and beautifully simple."
+          }
         </p>
 
         <div className="flex items-center gap-4 flex-wrap">

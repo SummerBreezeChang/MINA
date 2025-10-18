@@ -1,8 +1,6 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Figtree } from "next/font/google"
-import { GeistMono } from "geist/font/mono"
-import { Instrument_Serif } from "next/font/google"
+import { Figtree, Instrument_Serif } from "next/font/google"
 import "./globals.css"
 
 const figtree = Figtree({
@@ -21,8 +19,9 @@ const instrumentSerif = Instrument_Serif({
 })
 
 export const metadata: Metadata = {
-  title: "v0 App",
-  description: "Created with v0",
+  title: "Mina - Smart Shopping Made Simple",
+  description:
+    "AI-powered shopping intelligence that finds, compares, and recommends the best products for your business.",
   generator: "v0.app",
 }
 
@@ -32,18 +31,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <head>
-        <style>{`
-html {
-  font-family: ${figtree.style.fontFamily};
-  --font-sans: ${figtree.variable};
-  --font-mono: ${GeistMono.variable};
-  --font-instrument-serif: ${instrumentSerif.variable};
-}
-        `}</style>
-      </head>
-      <body className={`${figtree.variable} ${instrumentSerif.variable}`}>{children}</body>
+    <html lang="en" className={`${figtree.variable} ${instrumentSerif.variable}`}>
+      <body className={figtree.className}>{children}</body>
     </html>
   )
 }
