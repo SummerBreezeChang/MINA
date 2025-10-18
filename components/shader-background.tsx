@@ -72,7 +72,6 @@ export default function ShaderBackground({ children }: ShaderBackgroundProps) {
         className="absolute inset-0 w-full h-full opacity-60"
         colors={["#0f172a", "#e2e8f0", "#64748b", "#1e293b"]}
         speed={0.2}
-        wireframe="true"
         backgroundColor="transparent"
       />
 
