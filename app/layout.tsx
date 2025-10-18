@@ -4,6 +4,16 @@ import type { Metadata } from "next"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 
+import { Space_Grotesk, JetBrains_Mono, Space_Grotesk as V0_Font_Space_Grotesk, Geist_Mono as V0_Font_Geist_Mono, Noto_Serif as V0_Font_Noto_Serif } from 'next/font/google'
+
+// Initialize fonts
+const _spaceGrotesk = V0_Font_Space_Grotesk({ subsets: ['latin'], weight: ["300","400","500","600","700"] })
+const _geistMono = V0_Font_Geist_Mono({ subsets: ['latin'], weight: ["100","200","300","400","500","600","700","800","900"] })
+const _notoSerif = V0_Font_Noto_Serif({ subsets: ['latin'], weight: ["100","200","300","400","500","600","700","800","900"] })
+
+const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-sans" })
+const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-sans" })
+
 export const metadata: Metadata = {
   title: "Mina - Your Intelligent Shopping Agent",
   description:
@@ -18,7 +28,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className="font-sans antialiased">
+      <body className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
         {children}
         <Analytics />
       </body>

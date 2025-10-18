@@ -1,7 +1,6 @@
 import { Hero } from "@/components/hero"
 import { HowItWorks } from "@/components/how-it-works"
 import { UseCases } from "@/components/use-cases"
-import { CTA } from "@/components/cta"
 import { Header } from "@/components/header"
 
 export default function Home() {
@@ -11,7 +10,6 @@ export default function Home() {
       <Hero />
       <HowItWorks />
       <UseCases />
-      <CTA />
     </main>
   )
 }
