@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Sparkles } from "lucide-react"
+import Link from "next/link"
 
 export function Hero() {
   return (
@@ -17,12 +18,15 @@ export function Hero() {
 
           <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Button
+              asChild
               size="lg"
               className="group relative overflow-hidden shadow-[0_0_30px_rgba(96,165,250,0.3)] hover:shadow-[0_0_40px_rgba(96,165,250,0.5)] transition-all"
             >
-              <span className="relative z-10">Start Shopping with Mina</span>
-              <ArrowRight className="relative z-10 ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/20 to-primary/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+              <Link href="/search">
+                <span className="relative z-10">Start Shopping with Mina</span>
+                <ArrowRight className="relative z-10 ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/20 to-primary/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+              </Link>
             </Button>
             <Button
               size="lg"
