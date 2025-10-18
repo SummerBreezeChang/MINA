@@ -7,10 +7,13 @@ Provides a JSON API interface for the Mina shopping agent.
 import sys
 import json
 import os
-from dotenv import load_dotenv
 
-# Load environment variables
-load_dotenv()
+# Optional: Load environment variables
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass  # dotenv not required
 
 # Import MinaAgent
 from mina_agent import MinaAgent, ProductCategory
