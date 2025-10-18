@@ -1,16 +1,17 @@
-"use client"
+import { Hero } from "@/components/hero"
+import { HowItWorks } from "@/components/how-it-works"
+import { UseCases } from "@/components/use-cases"
+import { CTA } from "@/components/cta"
+import { Header } from "@/components/header"
 
-import Header from "@/components/header"
-import HeroContent from "@/components/hero-content"
-import PulsingCircle from "@/components/pulsing-circle"
-import ShaderBackground from "@/components/shader-background"
-
-export default function ShaderShowcase() {
+export default function Home() {
   return (
-    <ShaderBackground>
+    <main className="min-h-screen">
       <Header />
-      <HeroContent />
-      <PulsingCircle />
-    </ShaderBackground>
+      <Hero />
+      <HowItWorks />
+      <UseCases />
+      <CTA />
+    </main>
   )
 }

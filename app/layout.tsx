@@ -1,28 +1,23 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Figtree } from "next/font/google"
-import { GeistMono } from "geist/font/mono"
-import { Instrument_Serif } from "next/font/google"
+
+import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 
-const figtree = Figtree({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-figtree",
-  display: "swap",
-})
+import { Space_Grotesk, JetBrains_Mono, Archivo as V0_Font_Archivo, Geist_Mono as V0_Font_Geist_Mono, Noto_Serif as V0_Font_Noto_Serif } from 'next/font/google'
 
-const instrumentSerif = Instrument_Serif({
-  subsets: ["latin"],
-  weight: ["400"],
-  style: ["normal", "italic"],
-  variable: "--font-instrument-serif",
-  display: "swap",
-})
+// Initialize fonts
+const _archivo = V0_Font_Archivo({ subsets: ['latin'], weight: ["100","200","300","400","500","600","700","800","900"] })
+const _geistMono = V0_Font_Geist_Mono({ subsets: ['latin'], weight: ["100","200","300","400","500","600","700","800","900"] })
+const _notoSerif = V0_Font_Noto_Serif({ subsets: ['latin'], weight: ["100","200","300","400","500","600","700","800","900"] })
+
+const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-serif" })
+const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-serif" })
 
 export const metadata: Metadata = {
-  title: "v0 App",
-  description: "Created with v0",
+  title: "Mina - Your Intelligent Shopping Agent",
+  description:
+    "Find, compare, and recommend the best products for your business — fast, smart, and beautifully simple.",
   generator: "v0.app",
 }
 
@@ -32,18 +27,11 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <head>
-        <style>{`
-html {
-  font-family: ${figtree.style.fontFamily};
-  --font-sans: ${figtree.variable};
-  --font-mono: ${GeistMono.variable};
-  --font-instrument-serif: ${instrumentSerif.variable};
-}
-        `}</style>
-      </head>
-      <body className={`${figtree.variable} ${instrumentSerif.variable}`}>{children}</body>
+    <html lang="en" className="dark">
+      <body className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} font-serif antialiased`}>
+        {children}
+        <Analytics />
+      </body>
     </html>
   )
 }
