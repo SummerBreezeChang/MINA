@@ -1,0 +1,11 @@
+# Core - minimal dependencies for basic functionality
+python-dotenv>=1.0.0
+
+# Optional integrations - not required for basic functionality
+# anthropic>=0.40.0  # For Claude AI (optional, uses fallback)
+# browser-use>=0.8.0  # For web scraping (optional, uses mock data)
+# daytona>=0.2.0  # For sandbox execution (optional)
+
+# Data processing (commonly available)
+# pandas>=2.0.0
+# numpy>=1.24.0
