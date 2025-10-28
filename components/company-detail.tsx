@@ -50,7 +50,7 @@ export function CompanyDetail({ open, onOpenChange, company }: CompanyDetailProp
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-[#0a0a0a] border-[#2a2a2a]">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-[#0a0a0a] border-[#2a2a2a] text-foreground">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-white">{company.name}</DialogTitle>
           <div className="flex items-center gap-3 flex-wrap mt-2">
@@ -125,51 +125,16 @@ export function CompanyDetail({ open, onOpenChange, company }: CompanyDetailProp
 
           {/* Open Design Roles */}
           <div>
-            <h3 className="text-base font-semibold mb-3 text-white">Open Design Roles</h3>
+            
             <div className="space-y-3">
               {company.roles.map((role, index) => (
-                <div
-                  key={index}
-                  className="flex items-center justify-between p-4 rounded-lg bg-[#1a1a1a] border border-[#2a2a2a]"
-                >
-                  <div>
-                    <p className="font-medium text-white">{role.title}</p>
-                    <p className="text-sm text-gray-400">Posted {role.postedDays} days ago</p>
-                  </div>
-                  <div className="flex gap-2">
-                    <Button size="sm" variant="outline" asChild className="text-xs h-8 bg-transparent">
-                      <a href={role.linkedinUrl} target="_blank" rel="noopener noreferrer">
-                        LinkedIn
-                      </a>
-                    </Button>
-                    {role.greenhouseUrl && (
-                      <Button size="sm" asChild className="text-xs h-8">
-                        <a href={role.greenhouseUrl} target="_blank" rel="noopener noreferrer">
-                          Apply
-                        </a>
-                      </Button>
-                    )}
-                  </div>
-                </div>
+                null
               ))}
             </div>
           </div>
 
           {/* Why Mina Surfaced This */}
-          <div>
-            <h3 className="text-base font-semibold mb-3 flex items-center gap-2 text-white">
-              <Lightbulb className="h-4 w-4" />
-              Why Mina Surfaced This
-            </h3>
-            <ul className="space-y-2">
-              {company.whySurfaced.map((reason, index) => (
-                <li key={index} className="text-sm text-gray-300 flex items-start gap-2">
-                  <span className="text-[#c8ff00] mt-0.5">•</span>
-                  <span>{reason}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
+          
         </div>
       </DialogContent>
     </Dialog>
