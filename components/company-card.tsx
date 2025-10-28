@@ -62,9 +62,7 @@ export function CompanyCard({ company }: CompanyCardProps) {
     <>
       <div className="group rounded-xl border border-primary/20 backdrop-blur-sm p-6 transition-all hover:shadow-lg hover:-translate-y-1 bg-muted">
         <div className="flex items-start gap-4">
-          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg bg-primary/10 border border-primary/20">
-            <Building2 className="h-8 w-8 text-primary" />
-          </div>
+          
 
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-2 mb-2">
