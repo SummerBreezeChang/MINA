@@ -1,16 +1,50 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, Loader2 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { SignalTabs } from "@/components/signal-tabs"
+import { searchCompanies } from "@/app/actions/search-companies"
 
 export function Hero() {
   const [fundingStage, setFundingStage] = useState("")
   const [location, setLocation] = useState("")
+  const [companies, setCompanies] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
   const router = useRouter()
+
+  useEffect(() => {
+    async function loadInitialData() {
+      setLoading(true)
+      console.log("[v0] Hero: Loading initial data from You.com API")
+
+      // Load data for all three categories in parallel
+      const [fundingData, teamData, productData] = await Promise.all([
+        searchCompanies("series-c", "san-francisco", 0),
+        searchCompanies("series-d", "seattle", 0),
+        searchCompanies("series-e", "new-york", 0),
+      ])
+
+      console.log("[v0] Hero: Funding data:", fundingData.companies?.length || 0, "companies")
+      console.log("[v0] Hero: Team data:", teamData.companies?.length || 0, "companies")
+      console.log("[v0] Hero: Product data:", productData.companies?.length || 0, "companies")
+
+      // Combine all companies
+      const allCompanies = [
+        ...(fundingData.companies || []),
+        ...(teamData.companies || []),
+        ...(productData.companies || []),
+      ]
+
+      console.log("[v0] Hero: Total companies loaded:", allCompanies.length)
+      setCompanies(allCompanies)
+      setLoading(false)
+    }
+
+    loadInitialData()
+  }, [])
 
   const handleSearch = () => {
     const params = new URLSearchParams()
@@ -207,9 +241,26 @@ export function Hero() {
       <div className="container mx-auto px-6 lg:px-8 pb-6">
         <div className="mb-8 text-left">
           <h2 className="text-3xl font-bold mb-2">Latest Hiring Signals</h2>
-          
+          <p className="text-muted-foreground">
+            {loading
+              ? "Loading real-time data from You.com..."
+              : `Showing ${companies.length} companies with recent signals`}
+          </p>
         </div>
-        <SignalTabs companies={sampleCompanies} />
+
+        {loading ? (
+          <div className="flex items-center justify-center py-20">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <span className="ml-3 text-muted-foreground">Fetching real-time data from You.com API...</span>
+          </div>
+        ) : companies.length > 0 ? (
+          <SignalTabs companies={companies} />
+        ) : (
+          <div className="text-center py-20 text-muted-foreground">
+            <p>No companies found. You.com API returned no results.</p>
+            <p className="text-sm mt-2">Try adjusting your search criteria.</p>
+          </div>
+        )}
 
         <div className="text-center mt-8">
           <Button
@@ -217,6 +268,7 @@ export function Hero() {
             size="lg"
             onClick={handleSearch}
             className="border-primary/20 hover:bg-primary/5 bg-transparent"
+            disabled={!fundingStage || !location}
           >
             See More Companies
             <ArrowRight className="ml-2 h-4 w-4" />

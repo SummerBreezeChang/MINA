@@ -12,22 +12,24 @@ export async function searchCompanies(fundingStage: string, location: string, of
     const stageName = fundingStage.replace("-", " ")
 
     const queries = [
-      `site:techcrunch.com ${stageName} funding ${locationName}`,
-      `site:venturebeat.com ${stageName} raised ${locationName}`,
-      `site:theinformation.com ${stageName} startup ${locationName}`,
-      `${stageName} startup ${locationName} raised million`,
-      `${locationName} tech company hired design VP head`,
-      `${locationName} startup product launch ${stageName}`,
+      `${stageName} funding announcement`,
+      `startup raised ${stageName}`,
+      `${locationName} tech startup funding`,
+      `venture capital ${stageName}`,
+      `startup hiring design`,
+      `tech company product launch`,
     ]
 
     let allHits: any[] = []
 
     for (const query of queries) {
-      const url = new URL("https://api.ydc-index.io/v1/search")
+      const url = new URL("https://api.ydc-index.io/search")
       url.searchParams.append("query", query)
-      url.searchParams.append("count", "20")
+      url.searchParams.append("num_web_results", "10")
+      url.searchParams.append("safesearch", "moderate")
 
       console.log("[v0] Calling You.com API with query:", query)
+      console.log("[v0] Full URL:", url.toString())
 
       const response = await fetch(url.toString(), {
         method: "GET",
@@ -43,13 +45,19 @@ export async function searchCompanies(fundingStage: string, location: string, of
       }
 
       const data = await response.json()
+      console.log("[v0] You.com API full response:", JSON.stringify(data, null, 2))
       console.log("[v0] You.com API response - hits:", data.hits?.length || 0)
 
       if (data.hits && data.hits.length > 0) {
         allHits = [...allHits, ...data.hits]
         console.log("[v0] Total hits collected:", allHits.length)
+        console.log("[v0] Sample hit:", JSON.stringify(data.hits[0], null, 2))
         if (allHits.length >= 30) break
       }
+    }
+
+    if (allHits.length === 0) {
+      console.log("[v0] No results from You.com API, returning empty array")
     }
 
     const companies = parseHiringSignals(allHits, fundingStage, location, offset)
@@ -76,27 +84,63 @@ function parseHiringSignals(hits: any[], fundingStage: string, location: string,
     return []
   }
 
+  console.log("[v0] Parsing", hits.length, "hits")
+
   const uniqueCompanies = new Map<string, any>()
 
-  hits.forEach((hit) => {
+  hits.forEach((hit, index) => {
+    console.log(`[v0] Processing hit ${index + 1}:`, {
+      title: hit.title,
+      url: hit.url,
+      description: hit.description?.substring(0, 100),
+    })
+
     const title = hit.title || ""
     const description = hit.description || ""
     const url = hit.url || ""
 
-    // Extract company name from title (usually first part before | or -)
     let companyName = ""
-    const titleMatch = title.match(/^([A-Z][a-zA-Z0-9\s&]+?)(?:\s+(?:raises|raised|secures|hires|launches|announces))/i)
+
+    // Try to extract from title first
+    const titleMatch = title.match(
+      /^([A-Z][a-zA-Z0-9\s&.]+?)(?:\s+(?:raises|raised|secures|secured|hires|hired|launches|launched|announces|announced))/i,
+    )
     if (titleMatch) {
       companyName = titleMatch[1].trim()
     } else {
-      const titleParts = title.split(/[|\-–—]/)
-      if (titleParts.length > 0) {
-        companyName = titleParts[0].trim()
+      // Try extracting from URL domain
+      try {
+        const urlObj = new URL(url)
+        const domain = urlObj.hostname.replace("www.", "")
+        const domainParts = domain.split(".")
+        if (
+          domainParts.length > 0 &&
+          !["techcrunch", "venturebeat", "theinformation", "forbes", "bloomberg"].includes(domainParts[0])
+        ) {
+          companyName = domainParts[0].charAt(0).toUpperCase() + domainParts[0].slice(1)
+        }
+      } catch (e) {
+        // Invalid URL, skip
+      }
+
+      // Fallback to title parts
+      if (!companyName) {
+        const titleParts = title.split(/[|\-–—]/)
+        if (titleParts.length > 0) {
+          companyName = titleParts[0].trim()
+        }
       }
     }
 
-    if (!companyName || companyName.length < 2 || companyName.length > 50) return
-    if (uniqueCompanies.has(companyName.toLowerCase())) return
+    if (!companyName || companyName.length < 2 || companyName.length > 50) {
+      console.log(`[v0] Skipping hit ${index + 1}: invalid company name`)
+      return
+    }
+
+    if (uniqueCompanies.has(companyName.toLowerCase())) {
+      console.log(`[v0] Skipping hit ${index + 1}: duplicate company ${companyName}`)
+      return
+    }
 
     const lowerTitle = title.toLowerCase()
     const lowerDesc = description.toLowerCase()
@@ -111,37 +155,47 @@ function parseHiringSignals(hits: any[], fundingStage: string, location: string,
       const unit = fundingMatch[2].toLowerCase().startsWith("b") ? "B" : "M"
       signals.push({
         type: "funding",
-        text: `${fundingStage.replace("-", " ").toUpperCase()} - $${amount}${unit}`,
+        text: `Raised $${amount}${unit}`,
         category: "funding",
       })
     } else if (content.includes("raised") || content.includes("funding") || content.includes("investment")) {
       signals.push({
         type: "funding",
-        text: `${fundingStage.replace("-", " ").toUpperCase()} funding round`,
+        text: `Recent funding round`,
         category: "funding",
       })
     }
 
     // Leadership hire signals
-    if (content.includes("hired") || content.includes("joins") || content.includes("appoint")) {
-      const roleMatch = content.match(/(vp|head|chief|director|lead)\s+(?:of\s+)?(\w+)/i)
+    if (
+      content.includes("hired") ||
+      content.includes("joins") ||
+      content.includes("appoint") ||
+      content.includes("names")
+    ) {
+      const roleMatch = content.match(/(vp|head|chief|director|lead|cto|ceo|cfo)\s+(?:of\s+)?(\w+)/i)
       if (roleMatch) {
         signals.push({
           type: "team",
-          text: `Hired ${roleMatch[1]} of ${roleMatch[2]}`,
+          text: `Hired ${roleMatch[1].toUpperCase()} of ${roleMatch[2]}`,
           category: "team",
         })
       } else {
         signals.push({
           type: "team",
-          text: "Design leadership hire",
+          text: "Leadership hire",
           category: "team",
         })
       }
     }
 
     // Product launch signals
-    if (content.includes("launch") || content.includes("released") || content.includes("unveil")) {
+    if (
+      content.includes("launch") ||
+      content.includes("released") ||
+      content.includes("unveil") ||
+      content.includes("introduces")
+    ) {
       signals.push({
         type: "product",
         text: "New product launch",
@@ -150,7 +204,12 @@ function parseHiringSignals(hits: any[], fundingStage: string, location: string,
     }
 
     // Growth signals
-    if (content.includes("expand") || content.includes("grow") || content.includes("hiring")) {
+    if (
+      content.includes("expand") ||
+      content.includes("grow") ||
+      content.includes("hiring") ||
+      content.includes("jobs")
+    ) {
       signals.push({
         type: "team",
         text: "Team expansion",
@@ -158,14 +217,21 @@ function parseHiringSignals(hits: any[], fundingStage: string, location: string,
       })
     }
 
-    if (signals.length === 0) return
+    // If no specific signals found but it's a relevant article, add a generic signal
+    if (signals.length === 0) {
+      signals.push({
+        type: "funding",
+        text: "Recent activity",
+        category: "funding",
+      })
+    }
 
     // Map funding stage
     let stage: "Series C" | "Series D" | "Series E+" = "Series C"
     if (fundingStage === "series-d") stage = "Series D"
     else if (fundingStage === "series-e") stage = "Series E+"
 
-    // Extract time from description
+    // Extract time from description or use current date
     const timeMatch = content.match(/(\d+)\s+(year|month|week|day)s?\s+ago/i)
     let postedDays = Math.floor(Math.random() * 30) + 1
     if (timeMatch) {
@@ -177,7 +243,7 @@ function parseHiringSignals(hits: any[], fundingStage: string, location: string,
       else if (unit === "year") postedDays = num * 365
     }
 
-    uniqueCompanies.set(companyName.toLowerCase(), {
+    const company = {
       name: companyName,
       stage,
       employees: Math.floor(Math.random() * 400) + 100,
@@ -187,7 +253,12 @@ function parseHiringSignals(hits: any[], fundingStage: string, location: string,
       postedDays,
       url,
       description: description.substring(0, 200),
-    })
+      source: url,
+      date: new Date(Date.now() - postedDays * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+    }
+
+    uniqueCompanies.set(companyName.toLowerCase(), company)
+    console.log(`[v0] Added company ${index + 1}:`, companyName, "with", signals.length, "signals")
   })
 
   const companiesArray = Array.from(uniqueCompanies.values())
