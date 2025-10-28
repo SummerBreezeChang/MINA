@@ -2,11 +2,6 @@ import { MessageSquare, Target, TrendingUp, Award, Briefcase, Sparkles } from "l
 
 const steps = [
   {
-    icon: MessageSquare,
-    title: "Tell Mina What You're After",
-    description: "Share your preferred location and startup stage you're interested in — Mina will scout accordingly.",
-  },
-  {
     icon: Target,
     title: "Track Real-Time Hiring Signals",
     description: "Mina scans funding news, team growth, and product launches to spot companies expanding their design teams.",
@@ -27,11 +22,10 @@ export function HowItWorks() {
             How Mina Works
           </h2>
           <p className="text-pretty text-lg text-muted-foreground">
-            Mina tracks real startup movements — funding rounds, leadership hires, and product launches.
           </p>
         </div>
 
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-80 mx-11">
           {steps.map((step, index) => (
             <div key={index} className="relative group">
               {index < steps.length - 1 && (

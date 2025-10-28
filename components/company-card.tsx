@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { StageBadge } from "@/components/stage-badge"
 import { CompanyDetail } from "@/components/company-detail"
-import { Building2, Users, TrendingUp, Calendar } from "lucide-react"
+import { Users, TrendingUp, Calendar } from "lucide-react"
 
 interface CompanyCardProps {
   company: {
@@ -62,8 +62,6 @@ export function CompanyCard({ company }: CompanyCardProps) {
     <>
       <div className="group rounded-xl border border-primary/20 backdrop-blur-sm p-6 transition-all hover:shadow-lg hover:-translate-y-1 bg-muted">
         <div className="flex items-start gap-4">
-          
-
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-2 mb-2">
               <div>
@@ -102,30 +100,8 @@ export function CompanyCard({ company }: CompanyCardProps) {
               <Button size="sm" className="shadow-[0_0_20px_rgba(96,165,250,0.2)]" onClick={() => setDetailOpen(true)}>
                 View Details →
               </Button>
-              <Button size="sm" variant="outline" className="border-primary/20 bg-transparent">
-                Track Company
-              </Button>
-              <Button size="sm" variant="ghost" onClick={() => setExpanded(!expanded)} className="hover:text-primary">
-                {expanded ? "Show Less" : "Learn More"}
-              </Button>
+              
             </div>
-
-            {expanded && (
-              <div className="mt-4 pt-4 border-t border-primary/10 space-y-2 text-sm text-muted-foreground animate-in fade-in slide-in-from-top-2">
-                <p>
-                  <strong className="text-foreground">About:</strong> Leading company in their space with strong growth
-                  trajectory and innovative products.
-                </p>
-                <p>
-                  <strong className="text-foreground">Why Tracked:</strong> Multiple hiring signals indicate design team
-                  expansion before roles hit job boards.
-                </p>
-                <p>
-                  <strong className="text-foreground">Next Steps:</strong> Monitor for job postings, reach out to design
-                  leadership, or set up alerts for new roles.
-                </p>
-              </div>
-            )}
           </div>
         </div>
       </div>

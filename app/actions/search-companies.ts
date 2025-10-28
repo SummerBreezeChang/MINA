@@ -9,15 +9,17 @@ export async function searchCompanies(fundingStage: string, location: string, of
 
   try {
     const locationName = location.replace("-", " ")
-    const stageName = fundingStage.replace("-", " ")
+    let stageName = ""
+    if (fundingStage === "series-c") stageName = "Series C"
+    else if (fundingStage === "series-d") stageName = "Series D"
+    else if (fundingStage === "series-e") stageName = "Series E"
 
     const queries = [
-      `${stageName} funding announcement`,
-      `startup raised ${stageName}`,
-      `${locationName} tech startup funding`,
-      `venture capital ${stageName}`,
-      `startup hiring design`,
-      `tech company product launch`,
+      `${stageName} funding announcement ${locationName}`,
+      `startup raised ${stageName} round`,
+      `${stageName} venture capital ${locationName}`,
+      `${stageName} funding tech startup`,
+      `${locationName} ${stageName} startup funding`,
     ]
 
     let allHits: any[] = []
@@ -29,7 +31,6 @@ export async function searchCompanies(fundingStage: string, location: string, of
       url.searchParams.append("safesearch", "moderate")
 
       console.log("[v0] Calling You.com API with query:", query)
-      console.log("[v0] Full URL:", url.toString())
 
       const response = await fetch(url.toString(), {
         method: "GET",
@@ -45,13 +46,11 @@ export async function searchCompanies(fundingStage: string, location: string, of
       }
 
       const data = await response.json()
-      console.log("[v0] You.com API full response:", JSON.stringify(data, null, 2))
       console.log("[v0] You.com API response - hits:", data.hits?.length || 0)
 
       if (data.hits && data.hits.length > 0) {
         allHits = [...allHits, ...data.hits]
         console.log("[v0] Total hits collected:", allHits.length)
-        console.log("[v0] Sample hit:", JSON.stringify(data.hits[0], null, 2))
         if (allHits.length >= 30) break
       }
     }
@@ -89,26 +88,18 @@ function parseHiringSignals(hits: any[], fundingStage: string, location: string,
   const uniqueCompanies = new Map<string, any>()
 
   hits.forEach((hit, index) => {
-    console.log(`[v0] Processing hit ${index + 1}:`, {
-      title: hit.title,
-      url: hit.url,
-      description: hit.description?.substring(0, 100),
-    })
-
     const title = hit.title || ""
     const description = hit.description || ""
     const url = hit.url || ""
 
     let companyName = ""
 
-    // Try to extract from title first
     const titleMatch = title.match(
       /^([A-Z][a-zA-Z0-9\s&.]+?)(?:\s+(?:raises|raised|secures|secured|hires|hired|launches|launched|announces|announced))/i,
     )
     if (titleMatch) {
       companyName = titleMatch[1].trim()
     } else {
-      // Try extracting from URL domain
       try {
         const urlObj = new URL(url)
         const domain = urlObj.hostname.replace("www.", "")
@@ -123,7 +114,6 @@ function parseHiringSignals(hits: any[], fundingStage: string, location: string,
         // Invalid URL, skip
       }
 
-      // Fallback to title parts
       if (!companyName) {
         const titleParts = title.split(/[|\-–—]/)
         if (titleParts.length > 0) {
@@ -133,12 +123,10 @@ function parseHiringSignals(hits: any[], fundingStage: string, location: string,
     }
 
     if (!companyName || companyName.length < 2 || companyName.length > 50) {
-      console.log(`[v0] Skipping hit ${index + 1}: invalid company name`)
       return
     }
 
     if (uniqueCompanies.has(companyName.toLowerCase())) {
-      console.log(`[v0] Skipping hit ${index + 1}: duplicate company ${companyName}`)
       return
     }
 
@@ -148,7 +136,6 @@ function parseHiringSignals(hits: any[], fundingStage: string, location: string,
 
     const signals: { type: string; text: string; category: "funding" | "team" | "product" }[] = []
 
-    // Funding signals
     const fundingMatch = content.match(/\$(\d+(?:\.\d+)?)\s*(million|billion|m|b)/i)
     if (fundingMatch) {
       const amount = fundingMatch[1]
@@ -166,7 +153,6 @@ function parseHiringSignals(hits: any[], fundingStage: string, location: string,
       })
     }
 
-    // Leadership hire signals
     if (
       content.includes("hired") ||
       content.includes("joins") ||
@@ -189,7 +175,6 @@ function parseHiringSignals(hits: any[], fundingStage: string, location: string,
       }
     }
 
-    // Product launch signals
     if (
       content.includes("launch") ||
       content.includes("released") ||
@@ -203,7 +188,6 @@ function parseHiringSignals(hits: any[], fundingStage: string, location: string,
       })
     }
 
-    // Growth signals
     if (
       content.includes("expand") ||
       content.includes("grow") ||
@@ -217,7 +201,6 @@ function parseHiringSignals(hits: any[], fundingStage: string, location: string,
       })
     }
 
-    // If no specific signals found but it's a relevant article, add a generic signal
     if (signals.length === 0) {
       signals.push({
         type: "funding",
@@ -226,12 +209,10 @@ function parseHiringSignals(hits: any[], fundingStage: string, location: string,
       })
     }
 
-    // Map funding stage
     let stage: "Series C" | "Series D" | "Series E+" = "Series C"
     if (fundingStage === "series-d") stage = "Series D"
     else if (fundingStage === "series-e") stage = "Series E+"
 
-    // Extract time from description or use current date
     const timeMatch = content.match(/(\d+)\s+(year|month|week|day)s?\s+ago/i)
     let postedDays = Math.floor(Math.random() * 30) + 1
     if (timeMatch) {
@@ -243,9 +224,16 @@ function parseHiringSignals(hits: any[], fundingStage: string, location: string,
       else if (unit === "year") postedDays = num * 365
     }
 
+    let companyLocation = location.replace("-", " ")
+    const locationMatch = content.match(/(san francisco|new york|boston|seattle|austin|los angeles|chicago)/i)
+    if (locationMatch) {
+      companyLocation = locationMatch[1]
+    }
+
     const company = {
       name: companyName,
       stage,
+      location: companyLocation,
       employees: Math.floor(Math.random() * 400) + 100,
       roles: ["Design roles opening soon"],
       signals: signals.map((s) => s.text),
@@ -258,12 +246,10 @@ function parseHiringSignals(hits: any[], fundingStage: string, location: string,
     }
 
     uniqueCompanies.set(companyName.toLowerCase(), company)
-    console.log(`[v0] Added company ${index + 1}:`, companyName, "with", signals.length, "signals")
   })
 
   const companiesArray = Array.from(uniqueCompanies.values())
   console.log("[v0] Parsed companies:", companiesArray.length, "unique companies")
-  console.log("[v0] Company names:", companiesArray.map((c) => c.name).join(", "))
 
   return companiesArray.slice(offset, offset + 9)
 }
