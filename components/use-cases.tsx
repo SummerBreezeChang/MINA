@@ -1,24 +1,25 @@
 import { Card } from "@/components/ui/card"
-import { Building2, Settings, Palette } from "lucide-react"
+import { GraduationCap, TrendingUp, Users } from "lucide-react"
 
 const useCases = [
   {
-    icon: Building2,
-    title: "Scaling Founders",
-    description: "Expanding offices or upgrading equipment quickly without the procurement headache.",
-    example: '"Find 20 ergonomic chairs under $900 in a minimalist style"',
+    icon: GraduationCap,
+    title: "Junior Designers",
+    description: "Breaking into the industry or leveling up from junior to mid-level with clear skill roadmaps.",
+    example: '"What skills do I need to become a senior product designer?"',
   },
   {
-    icon: Settings,
-    title: "Operations Managers",
-    description: "Handling procurement and vendor coordination with analytical precision and team collaboration.",
-    example: '"Compare standing desks with warranty coverage and fast delivery"',
+    icon: TrendingUp,
+    title: "Career Switchers",
+    description: "Transitioning into design from other fields with personalized learning paths and portfolio guidance.",
+    example: '"How do I transition from marketing to UX design?"',
   },
   {
-    icon: Palette,
-    title: "Design Consultants",
-    description: "Curating premium setups for client workspaces with style mode and sustainability scoring.",
-    example: '"Modern executive office setup with eco-friendly materials"',
+    icon: Users,
+    title: "Senior Designers",
+    description:
+      "Advancing to leadership roles, exploring specializations, or negotiating better compensation packages.",
+    example: '"What companies are hiring design directors in fintech?"',
   },
 ]
 
@@ -28,10 +29,10 @@ export function UseCases() {
       <div className="container mx-auto px-6 lg:px-8">
         <div className="mx-auto mb-16 max-w-2xl text-center">
           <h2 className="mb-4 text-balance text-3xl font-bold tracking-tight lg:text-5xl bg-gradient-to-br from-foreground to-primary bg-clip-text text-transparent">
-            Built for teams that move fast
+            Built for designers at every stage
           </h2>
           <p className="text-pretty text-lg text-muted-foreground">
-            Whether you're scaling, managing operations, or curating premium spaces, Mina adapts to your workflow.
+            Whether you're just starting out, switching careers, or advancing to leadership, Mina guides your journey.
           </p>
         </div>
 

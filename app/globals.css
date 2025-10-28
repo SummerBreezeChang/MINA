@@ -46,11 +46,11 @@
   --foreground: oklch(0.98 0 0);
   --card: rgb(18, 18, 18);
   --card-foreground: oklch(0.98 0 0);
-  --popover: rgb(180, 119, 245);
+  --popover: rgb(26, 62, 111);
   --popover-foreground: oklch(0.98 0 0);
   --primary: #d6ff3f;
   --primary-foreground: rgb(18, 18, 18);
-  --secondary: #d6ff3f;
+  --secondary: rgb(236, 255, 169);
   --secondary-foreground: rgb(18, 18, 18);
   --muted: oklch(0.15 0.01 240);
   --muted-foreground: oklch(0.65 0.05 220);

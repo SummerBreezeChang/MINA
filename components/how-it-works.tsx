@@ -1,35 +1,35 @@
-import { MessageSquare, Search, LayoutGrid, CheckCircle2, ShoppingBag, Package } from "lucide-react"
+import { MessageSquare, Target, TrendingUp, Award, Briefcase, Sparkles } from "lucide-react"
 
 const steps = [
   {
     icon: MessageSquare,
-    title: "Describe What You Need",
-    description: "Chat with Mina about your requirements — budget, color, material, purpose, and style preferences.",
+    title: "Share Your Career Goals",
+    description: "Tell Mina about your design aspirations, skills, experience level, and what you're looking for next.",
   },
   {
-    icon: Search,
-    title: "Mina Searches Trusted Vendors",
-    description: "Our AI extracts details and searches across trusted vendors to find the best matches.",
+    icon: Target,
+    title: "AI-Powered Career Analysis",
+    description: "Mina analyzes market trends, salary data, and skill demands to map your optimal career path.",
   },
   {
-    icon: LayoutGrid,
-    title: "Review Visual Comparisons",
-    description: "Get clean, visual comparison cards ranked by fit — price, quality, delivery, and style.",
+    icon: TrendingUp,
+    title: "Personalized Recommendations",
+    description: "Get tailored advice on roles, companies, skills to learn, and portfolio improvements.",
   },
   {
-    icon: CheckCircle2,
-    title: "Approve Your Choice",
-    description: "You or your team reviews and approves the preferred option with confidence.",
+    icon: Award,
+    title: "Skill Gap Assessment",
+    description: "Identify exactly what skills you need to reach your next career milestone with actionable steps.",
   },
   {
-    icon: ShoppingBag,
-    title: "Purchase-Ready Carts",
-    description: "Mina prepares purchase-ready carts or vendor quotes for seamless checkout.",
+    icon: Briefcase,
+    title: "Job Market Insights",
+    description: "Access real-time data on hiring trends, salary ranges, and company culture for design roles.",
   },
   {
-    icon: Package,
-    title: "Track & Follow Up",
-    description: "Monitor order status and get notified of follow-ups or discounts automatically.",
+    icon: Sparkles,
+    title: "Continuous Career Tracking",
+    description: "Monitor your progress, get alerts on relevant opportunities, and refine your strategy over time.",
   },
 ]
 
@@ -42,7 +42,7 @@ export function HowItWorks() {
             How Mina works
           </h2>
           <p className="text-pretty text-lg text-muted-foreground">
-            A seamless journey from request to delivery, designed for busy teams.
+            A seamless journey from career exploration to landing your dream design role.
           </p>
         </div>
 
