@@ -1,10 +1,14 @@
+"use client"
+
+import { useState } from "react"
 import { Header } from "@/components/header"
 import { CompanyCard } from "@/components/company-card"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { FileSpreadsheet } from "lucide-react"
+import { FileSpreadsheet, Loader2 } from "lucide-react"
+import { searchCompanies } from "../actions/search-companies"
 
-const companies = [
+const initialCompanies = [
   {
     name: "Anthropic",
     stage: "Series C" as const,
@@ -36,6 +40,33 @@ const companies = [
 ]
 
 export default function ResultsPage() {
+  const [companies, setCompanies] = useState(initialCompanies)
+  const [loading, setLoading] = useState(false)
+  const [hasMore, setHasMore] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  const handleLoadMore = async () => {
+    setLoading(true)
+    setError(null)
+
+    try {
+      const result = await searchCompanies("Senior Product Designer", "San Francisco", companies.length)
+
+      if (result.success && result.companies.length > 0) {
+        setCompanies([...companies, ...result.companies])
+        setHasMore(result.hasMore)
+      } else {
+        setError(result.error || "No more companies found")
+        setHasMore(false)
+      }
+    } catch (err) {
+      console.error("[v0] Error loading more companies:", err)
+      setError("Failed to load more companies")
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -45,7 +76,7 @@ export default function ResultsPage() {
         <div className="mb-8">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
             <h1 className="text-3xl font-bold text-foreground">
-              Found {companies.length} companies hiring Senior Product Designers in San Francisco
+              Found {companies.length}+ companies hiring Senior Product Designers in San Francisco
             </h1>
 
             <div className="flex items-center gap-3">
@@ -79,9 +110,26 @@ export default function ResultsPage() {
 
         {/* Load More */}
         <div className="mt-8 text-center">
-          <Button variant="outline" size="lg" className="border-primary/20 bg-transparent">
-            Load More Companies
-          </Button>
+          {error && <p className="text-sm text-red-500 mb-4">{error}</p>}
+          {hasMore && (
+            <Button
+              variant="outline"
+              size="lg"
+              className="border-primary/20 bg-transparent"
+              onClick={handleLoadMore}
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Loading...
+                </>
+              ) : (
+                "Load More Companies"
+              )}
+            </Button>
+          )}
+          {!hasMore && !error && <p className="text-sm text-muted-foreground">No more companies to load</p>}
         </div>
       </main>
     </div>
