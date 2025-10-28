@@ -1,5 +1,5 @@
 // app/api/search/route.ts
-// CORRECTED You.com API integration with proper endpoint
+// FINAL CORRECTED You.com API integration
 
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -24,17 +24,15 @@ export async function POST(request: NextRequest) {
     const searchQuery = `${role} ${location} Series C OR Series D startup hiring site:linkedin.com`;
     console.log('📝 Query:', searchQuery);
 
-    // CORRECT You.com API endpoint from documentation
-    // Base URL: https://api.ydc-index.io
-    const apiUrl = `https://api.ydc-index.io/search?query=${encodeURIComponent(searchQuery)}&num_web_results=10`;
+    // CORRECT You.com API endpoint with /v1/search
+    const apiUrl = `https://api.ydc-index.io/v1/search?query=${encodeURIComponent(searchQuery)}`;
     
     console.log('🌐 Calling:', apiUrl);
 
     const youcomResponse = await fetch(apiUrl, {
       method: 'GET',
       headers: {
-        'X-API-Key': YOU_API_KEY,  // Header format from docs
-        'Content-Type': 'application/json',
+        'X-API-Key': YOU_API_KEY,
       },
     });
 
@@ -50,7 +48,7 @@ export async function POST(request: NextRequest) {
 
     const youcomData = await youcomResponse.json();
     console.log('✅ Got response from You.com');
-    console.log('📊 Response structure:', Object.keys(youcomData));
+    console.log('📊 Response keys:', Object.keys(youcomData));
 
     // Parse results
     const companies = parseYoucomResults(youcomData, role, location);
@@ -59,11 +57,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       companies,
       success: true,
-      count: companies.length,
-      debug: {
-        query: searchQuery,
-        resultsFound: youcomData.hits?.length || 0
-      }
+      count: companies.length
     });
 
   } catch (error) {
@@ -81,16 +75,12 @@ export async function POST(request: NextRequest) {
 function parseYoucomResults(youcomData: any, role: string, location: string) {
   const companies: any[] = [];
   
-  // You.com returns results in different possible structures
-  // Based on their docs, web results are in hits array
-  const hits = youcomData.hits || 
-               youcomData.results?.web || 
-               youcomData.web?.results ||
-               [];
+  // You.com API returns results in: results.web array
+  const webResults = youcomData.results?.web || youcomData.hits || [];
 
-  console.log(`📊 Processing ${hits.length} search results`);
+  console.log(`📊 Processing ${webResults.length} search results`);
 
-  for (const hit of hits) {
+  for (const hit of webResults) {
     try {
       const snippet = hit.description || hit.snippet || '';
       const title = hit.title || '';
@@ -109,7 +99,7 @@ function parseYoucomResults(youcomData: any, role: string, location: string) {
         .trim();
 
       if (companyName.length < 2) {
-        console.log('⏭️ Skipping - company name too short:', companyName);
+        console.log('⏭️ Skipping - company name too short');
         continue;
       }
 
@@ -119,7 +109,7 @@ function parseYoucomResults(youcomData: any, role: string, location: string) {
 
       // Only include Series C+ companies
       if (!['C', 'D', 'E'].includes(fundingStage.charAt(fundingStage.length - 1))) {
-        console.log('⏭️ Skipping - not Series C+:', companyName);
+        console.log('⏭️ Skipping - not Series C+');
         continue;
       }
 
