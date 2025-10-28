@@ -3,35 +3,20 @@ import { MessageSquare, Target, TrendingUp, Award, Briefcase, Sparkles } from "l
 const steps = [
   {
     icon: MessageSquare,
-    title: "Share Your Career Goals",
-    description: "Tell Mina about your design aspirations, skills, experience level, and what you're looking for next.",
+    title: "Tell Mina What You're After",
+    description: "Share your preferred location and startup stage you're interested in — Mina will scout accordingly.",
   },
   {
     icon: Target,
-    title: "AI-Powered Career Analysis",
-    description: "Mina analyzes market trends, salary data, and skill demands to map your optimal career path.",
+    title: "Track Real-Time Hiring Signals",
+    description: "Mina scans funding news, team growth, and product launches to spot companies expanding their design teams.",
   },
   {
     icon: TrendingUp,
-    title: "Personalized Recommendations",
-    description: "Get tailored advice on roles, companies, skills to learn, and portfolio improvements.",
+    title: "Discover Companies Before Job Posts Go Live",
+    description: "See which Series C+ startups are actively growing design teams — and act before roles hit job boards.",
   },
-  {
-    icon: Award,
-    title: "Skill Gap Assessment",
-    description: "Identify exactly what skills you need to reach your next career milestone with actionable steps.",
-  },
-  {
-    icon: Briefcase,
-    title: "Job Market Insights",
-    description: "Access real-time data on hiring trends, salary ranges, and company culture for design roles.",
-  },
-  {
-    icon: Sparkles,
-    title: "Continuous Career Tracking",
-    description: "Monitor your progress, get alerts on relevant opportunities, and refine your strategy over time.",
-  },
-]
+];
 
 export function HowItWorks() {
   return (
@@ -39,10 +24,10 @@ export function HowItWorks() {
       <div className="container mx-auto px-6 lg:px-8">
         <div className="mx-auto mb-16 max-w-2xl text-center">
           <h2 className="mb-4 text-balance text-3xl font-bold tracking-tight lg:text-5xl bg-gradient-to-br from-foreground to-primary bg-clip-text text-transparent">
-            How Mina works
+            How Mina Works
           </h2>
           <p className="text-pretty text-lg text-muted-foreground">
-            A seamless journey from career exploration to landing your dream design role.
+            Mina tracks real startup movements — funding rounds, leadership hires, and product launches.
           </p>
         </div>
 

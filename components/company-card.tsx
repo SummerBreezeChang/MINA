@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { StageBadge } from "@/components/stage-badge"
 import { CompanyDetail } from "@/components/company-detail"
-import { Building2, Users, Briefcase, Calendar } from "lucide-react"
+import { Building2, Users, TrendingUp, Calendar } from "lucide-react"
 
 interface CompanyCardProps {
   company: {
@@ -34,11 +34,11 @@ export function CompanyCard({ company }: CompanyCardProps) {
       greenhouseUrl: "https://greenhouse.io/apply",
     })),
     signals: company.signals.map((signal) => ({
-      type: signal.includes("Raised")
+      type: signal.includes("funding")
         ? ("funding" as const)
-        : signal.includes("Hired")
+        : signal.includes("hire")
           ? ("hire" as const)
-          : signal.includes("team")
+          : signal.includes("expansion")
             ? ("growth" as const)
             : ("product" as const),
       text: signal,
@@ -52,7 +52,7 @@ export function CompanyCard({ company }: CompanyCardProps) {
     whySurfaced: [
       `${company.stage} company with strong funding and growth trajectory`,
       `Recently expanded design team by ${Math.floor(Math.random() * 30 + 20)}%`,
-      `Multiple design roles open indicating team growth`,
+      `Showing multiple hiring signals indicating team growth`,
       "High Glassdoor rating and positive employee reviews",
       "Active product development with recent launches",
     ],
@@ -82,41 +82,30 @@ export function CompanyCard({ company }: CompanyCardProps) {
 
             <div className="mb-4 rounded-lg bg-primary/5 border border-primary/10 p-4">
               <div className="flex items-center gap-2 mb-2 text-primary font-semibold">
-                <Briefcase className="h-4 w-4" />
-                {company.roles.length} Design Role{company.roles.length > 1 ? "s" : ""} Open
+                <TrendingUp className="h-4 w-4" />
+                Hiring Signals Detected
               </div>
               <ul className="space-y-1">
-                {company.roles.map((role, index) => (
-                  <li key={index} className="text-sm text-foreground ml-6 list-disc">
-                    {role}
+                {company.signals.map((signal, index) => (
+                  <li key={index} className="text-sm text-foreground flex items-start gap-2">
+                    <span className="mt-0.5">{signal.split(" ")[0]}</span>
+                    <span>{signal.substring(signal.indexOf(" ") + 1)}</span>
                   </li>
                 ))}
               </ul>
             </div>
 
-            <div className="mb-4 space-y-2">
-              {company.signals.map((signal, index) => {
-                const icon = signal.includes("Raised") ? "💰" : signal.includes("Hired") ? "👔" : "🚀"
-                return (
-                  <div key={index} className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <span className="text-base">{icon}</span>
-                    <span>{signal}</span>
-                  </div>
-                )
-              })}
-            </div>
-
             <div className="flex items-center gap-1 text-xs text-muted-foreground mb-4">
               <Calendar className="h-3 w-3" />
-              Posted: {company.postedDays} day{company.postedDays > 1 ? "s" : ""} ago
+              Signal detected: {company.postedDays} day{company.postedDays > 1 ? "s" : ""} ago
             </div>
 
             <div className="flex flex-wrap gap-2">
               <Button size="sm" className="shadow-[0_0_20px_rgba(96,165,250,0.2)]" onClick={() => setDetailOpen(true)}>
-                View Roles →
+                View Details →
               </Button>
               <Button size="sm" variant="outline" className="border-primary/20 bg-transparent">
-                Save Company
+                Track Company
               </Button>
               <Button size="sm" variant="ghost" onClick={() => setExpanded(!expanded)} className="hover:text-primary">
                 {expanded ? "Show Less" : "Learn More"}
@@ -130,12 +119,12 @@ export function CompanyCard({ company }: CompanyCardProps) {
                   trajectory and innovative products.
                 </p>
                 <p>
-                  <strong className="text-foreground">Design Team:</strong> Growing design organization focused on
-                  user-centered design and design systems.
+                  <strong className="text-foreground">Why Tracked:</strong> Multiple hiring signals indicate design team
+                  expansion before roles hit job boards.
                 </p>
                 <p>
-                  <strong className="text-foreground">Benefits:</strong> Competitive salary, equity, health insurance,
-                  remote flexibility, and professional development budget.
+                  <strong className="text-foreground">Next Steps:</strong> Monitor for job postings, reach out to design
+                  leadership, or set up alerts for new roles.
                 </p>
               </div>
             )}
