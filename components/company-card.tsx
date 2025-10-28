@@ -60,9 +60,9 @@ export function CompanyCard({ company }: CompanyCardProps) {
 
   return (
     <>
-      <div className="group rounded-xl border border-primary/20 backdrop-blur-sm p-6 transition-all hover:shadow-lg hover:-translate-y-1 bg-muted">
-        <div className="flex items-start gap-4">
-          <div className="flex-1 min-w-0">
+      <div className="group rounded-xl border border-primary/20 backdrop-blur-sm p-6 transition-all hover:shadow-lg hover:-translate-y-1 bg-card h-full flex flex-col">
+        <div className="flex items-start gap-4 flex-1 flex-col">
+          <div className="flex-1 min-w-0 flex flex-col w-full">
             <div className="flex items-start justify-between gap-2 mb-2">
               <div>
                 <h3 className="text-xl font-semibold text-foreground mb-1">{company.name}</h3>
@@ -76,14 +76,14 @@ export function CompanyCard({ company }: CompanyCardProps) {
               </div>
             </div>
 
-            <div className="mb-4 rounded-lg bg-primary/5 border border-primary/10 p-4">
+            <div className="mb-4 rounded-lg bg-primary/5 border border-primary/10 p-4 min-h-[88px]">
               <div className="flex items-center gap-2 mb-2 text-primary font-semibold">
-                <TrendingUp className="h-4 w-4" />
+                
                 Hiring Signals Detected
               </div>
               <ul className="space-y-1">
                 {company.signals.map((signal, index) => (
-                  <li key={index} className="text-sm text-foreground flex items-start gap-2">
+                  <li key={index} className="text-sm text-foreground flex gap-2 items-end">
                     <span className="mt-0.5">{signal.split(" ")[0]}</span>
                     <span>{signal.substring(signal.indexOf(" ") + 1)}</span>
                   </li>
@@ -92,15 +92,14 @@ export function CompanyCard({ company }: CompanyCardProps) {
             </div>
 
             <div className="flex items-center gap-1 text-xs text-muted-foreground mb-4">
-              <Calendar className="h-3 w-3" />
+              
               Signal detected: {company.postedDays} day{company.postedDays > 1 ? "s" : ""} ago
             </div>
 
-            <div className="flex flex-wrap gap-2">
-              <Button size="sm" className="shadow-[0_0_20px_rgba(96,165,250,0.2)]" onClick={() => setDetailOpen(true)}>
-                View Details →
+            <div className="flex flex-wrap gap-2 mt-auto">
+              <Button size="sm" className="shadow-[0_0_20px_rgba(96,165,250,0.2)] px-11 bg-secondary" onClick={() => setDetailOpen(true)}>
+                View Details 
               </Button>
-              
             </div>
           </div>
         </div>

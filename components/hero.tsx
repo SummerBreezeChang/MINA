@@ -200,8 +200,8 @@ export function Hero() {
             Find Design Roles at Growing Startups
           </h1>
 
-          <div className="mx-auto max-w-3xl mb-16">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="mx-auto w-full max-w-3xl mb-16 min-h-[56px]">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-center min-h-[56px]">
               <Select value={fundingStage} onValueChange={setFundingStage}>
                 <SelectTrigger className="w-full sm:w-[280px] bg-background/80 backdrop-blur-sm border-primary/20 !h-[56px] text-base">
                   <SelectValue placeholder="Funding stage" />

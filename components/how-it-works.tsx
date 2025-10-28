@@ -1,31 +1,32 @@
-import { MessageSquare, Target, TrendingUp, Award, Briefcase, Sparkles } from "lucide-react"
+import { Target, TrendingUp } from "lucide-react"
 
 const steps = [
   {
     icon: Target,
     title: "Track Real-Time Hiring Signals",
-    description: "Mina scans funding news, team growth, and product launches to spot companies expanding their design teams.",
+    description:
+      "Mina scans funding news, team growth, and product launches to spot companies expanding their design teams.",
   },
   {
     icon: TrendingUp,
     title: "Discover Companies Before Job Posts Go Live",
-    description: "See which Series C+ startups are actively growing design teams — and act before roles hit job boards.",
+    description:
+      "See which Series C+ startups are actively growing design teams — and act before roles hit job boards.",
   },
-];
+]
 
 export function HowItWorks() {
   return (
     <section id="how-it-works" className="py-20 lg:py-32 relative">
       <div className="container mx-auto px-6 lg:px-8">
         <div className="mx-auto mb-16 max-w-2xl text-center">
-          <h2 className="mb-4 text-balance text-3xl font-bold tracking-tight lg:text-5xl bg-gradient-to-br from-foreground to-primary bg-clip-text text-transparent">
+          <h2 className="text-balance text-3xl font-bold tracking-tight lg:text-5xl bg-gradient-to-br from-foreground to-primary bg-clip-text text-transparent px-0 mb-3 text-center">
             How Mina Works
           </h2>
-          <p className="text-pretty text-lg text-muted-foreground">
-          </p>
+          <p className="text-pretty text-lg text-muted-foreground"></p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-80 mx-11">
+        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           {steps.map((step, index) => (
             <div key={index} className="relative group">
               {index < steps.length - 1 && (

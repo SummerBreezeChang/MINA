@@ -10,37 +10,6 @@ import { FileSpreadsheet, Loader2 } from "lucide-react"
 import { searchCompanies } from "../actions/search-companies"
 import { SignalTabs } from "@/components/signal-tabs"
 
-const initialCompanies = [
-  {
-    name: "Anthropic",
-    stage: "Series C" as const,
-    employees: 400,
-    roles: ["Senior Product Designer", "Design Systems Designer"],
-    signals: ["Raised $1.5B (Sep 2025)", "Hired VP of Design (Sarah Chen, ex-Figma)", "Launched Claude 3 (10M users)"],
-    postedDays: 3,
-  },
-  {
-    name: "Runway",
-    stage: "Series C" as const,
-    employees: 150,
-    roles: ["Senior Product Designer", "Staff Product Designer", "Lead Product Designer"],
-    signals: ["Raised $100M (Sept 2024)", "Hired Head of Design (Alex Kim, ex-Adobe)", "Launched Gen-2 (5M users)"],
-    postedDays: 5,
-  },
-  {
-    name: "Scale AI",
-    stage: "Series D" as const,
-    employees: 400,
-    roles: ["Staff Product Designer"],
-    signals: [
-      "Raised $600M (May 2024)",
-      "Hired Design Director (Jordan Lee, ex-Google)",
-      "Expanded to enterprise (500+ clients)",
-    ],
-    postedDays: 7,
-  },
-]
-
 const formatFundingStage = (stage: string) => {
   return stage
     .split("-")
@@ -121,7 +90,17 @@ export default function ResultsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen relative overflow-hidden">
+        <div className="absolute inset-0 -z-10">
+          <div
+            className="absolute inset-0 animate-[pan_60s_ease-in-out_infinite]"
+            style={{
+              background:
+                "linear-gradient(180deg, #1a1a3e 0%, #2d2550 15%, #8b7ba8 25%, #c94d7a 35%, #ff8c42 45%, #ffb347 50%, #d4af37 52%, #ff9a8b 58%, #ff7a6b 62%, #d97aa6 70%, #9d8dc9 80%, #5a7dc9 90%, #6ba3d9 100%)",
+              backgroundSize: "200% 200%",
+            }}
+          />
+        </div>
         <Header />
         <main className="container mx-auto px-6 lg:px-8 pt-24 pb-16">
           <div className="flex items-center justify-center min-h-[400px]">
@@ -136,7 +115,18 @@ export default function ResultsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen relative overflow-hidden">
+      <div className="absolute inset-0 -z-10">
+        <div
+          className="absolute inset-0 animate-[pan_60s_ease-in-out_infinite]"
+          style={{
+            background:
+              "linear-gradient(180deg, #1a1a3e 0%, #2d2550 15%, #8b7ba8 25%, #c94d7a 35%, #ff8c42 45%, #ffb347 50%, #d4af37 52%, #ff9a8b 58%, #ff7a6b 62%, #d97aa6 70%, #9d8dc9 80%, #5a7dc9 90%, #6ba3d9 100%)",
+            backgroundSize: "200% 200%",
+          }}
+        />
+      </div>
+
       <Header />
 
       <main className="container mx-auto px-6 lg:px-8 pt-24 pb-16">
@@ -175,7 +165,7 @@ export default function ResultsPage() {
 
         {/* Company Cards */}
         {companies.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {companies.map((company, index) => (
               <CompanyCard key={`${company.name}-${index}`} company={company} />
             ))}
