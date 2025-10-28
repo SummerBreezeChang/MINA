@@ -49,10 +49,10 @@
   --popover: rgb(26, 62, 111);
   --popover-foreground: oklch(0.98 0 0);
   --primary: #d6ff3f;
-  --primary-foreground: rgb(18, 18, 18);
+  --primary-foreground: rgb(25, 25, 25);
   --secondary: rgb(236, 255, 169);
-  --secondary-foreground: rgb(18, 18, 18);
-  --muted: oklch(0.15 0.01 240);
+  --secondary-foreground: rgb(36, 36, 36);
+  --muted: rgb(26, 36, 36);
   --muted-foreground: oklch(0.65 0.05 220);
   --accent: #d6ff3f;
   --accent-foreground: rgb(18, 18, 18);

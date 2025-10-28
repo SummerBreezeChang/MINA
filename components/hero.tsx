@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ArrowRight } from "lucide-react"
+import Link from "next/link"
 
 export function Hero() {
   return (
@@ -50,13 +51,15 @@ export function Hero() {
                 </SelectContent>
               </Select>
 
-              <Button
-                size="lg"
-                className="px-8 whitespace-nowrap shadow-[0_0_30px_rgba(96,165,250,0.3)] hover:shadow-[0_0_40px_rgba(96,165,250,0.5)] transition-all h-[56px] text-base"
-              >
-                Search Companies
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
+              <Link href="/results" className="w-full sm:w-auto">
+                <Button
+                  size="lg"
+                  className="w-full px-8 whitespace-nowrap shadow-[0_0_30px_rgba(96,165,250,0.3)] hover:shadow-[0_0_40px_rgba(96,165,250,0.5)] transition-all h-[56px] text-base"
+                >
+                  Search Companies
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+              </Link>
             </div>
 
             <p className="mt-4 text-sm text-muted-foreground">This is real-time search powered by You.com</p>
