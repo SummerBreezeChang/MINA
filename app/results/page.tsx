@@ -143,10 +143,7 @@ export default function ResultsPage() {
         {/* Results Header */}
         <div className="mb-8">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-            <h1 className="text-3xl font-bold text-foreground">
-              Found {companies.length} {formatFundingStage(fundingStage)} companies with hiring signals in{" "}
-              {formatLocation(location)}
-            </h1>
+            <h1 className="text-3xl font-bold text-foreground">Results</h1>
 
             <div className="flex items-center gap-3">
               <Select defaultValue="newest">
