@@ -19,7 +19,6 @@ interface SignalTabsProps {
 function categorizeIndustry(companyName: string, description: string): string {
   const text = (companyName + " " + description).toLowerCase()
 
-  // AI & Machine Learning
   if (
     text.includes("ai ") ||
     text.includes("artificial intelligence") ||
@@ -33,7 +32,6 @@ function categorizeIndustry(companyName: string, description: string): string {
     return "AI"
   }
 
-  // SaaS
   if (
     text.includes("saas") ||
     text.includes("software as a service") ||
@@ -43,7 +41,6 @@ function categorizeIndustry(companyName: string, description: string): string {
     return "SaaS"
   }
 
-  // Fintech
   if (
     text.includes("fintech") ||
     text.includes("financial") ||
@@ -57,7 +54,6 @@ function categorizeIndustry(companyName: string, description: string): string {
     return "Fintech"
   }
 
-  // Healthtech
   if (
     text.includes("health") ||
     text.includes("medical") ||
@@ -70,7 +66,6 @@ function categorizeIndustry(companyName: string, description: string): string {
     return "Healthtech"
   }
 
-  // E-commerce
   if (
     text.includes("ecommerce") ||
     text.includes("e-commerce") ||
@@ -82,7 +77,6 @@ function categorizeIndustry(companyName: string, description: string): string {
     return "E-commerce"
   }
 
-  // Climate & CleanTech
   if (
     text.includes("climate") ||
     text.includes("cleantech") ||
@@ -97,7 +91,6 @@ function categorizeIndustry(companyName: string, description: string): string {
     return "CleanTech"
   }
 
-  // Developer Tools
   if (
     text.includes("developer") ||
     text.includes("devtools") ||
@@ -111,7 +104,6 @@ function categorizeIndustry(companyName: string, description: string): string {
     return "Developer Tools"
   }
 
-  // Cyber Security
   if (
     text.includes("security") ||
     text.includes("cybersecurity") ||
@@ -123,7 +115,6 @@ function categorizeIndustry(companyName: string, description: string): string {
     return "Cyber Security"
   }
 
-  // Compliance
   if (
     text.includes("compliance") ||
     text.includes("regulatory") ||
@@ -134,7 +125,6 @@ function categorizeIndustry(companyName: string, description: string): string {
     return "Compliance"
   }
 
-  // Enterprise
   if (
     text.includes("enterprise") ||
     text.includes("b2b") ||
@@ -145,7 +135,6 @@ function categorizeIndustry(companyName: string, description: string): string {
     return "Enterprise"
   }
 
-  // Consumer
   if (
     text.includes("consumer") ||
     text.includes("b2c") ||
@@ -157,8 +146,20 @@ function categorizeIndustry(companyName: string, description: string): string {
     return "Consumer"
   }
 
-  // Default to Enterprise if no clear category
   return "Enterprise"
+}
+
+function formatDate(dateString: string): string {
+  try {
+    const date = new Date(dateString)
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    })
+  } catch {
+    return ""
+  }
 }
 
 export function SignalTabs({ companies }: SignalTabsProps) {
@@ -240,7 +241,6 @@ export function SignalTabs({ companies }: SignalTabsProps) {
 
   return (
     <div className="mb-12">
-      {/* Tabs */}
       <div className="border-b border-primary/20 mb-8">
         <div className="flex gap-8">
           {tabs.map((tab) => (
@@ -258,7 +258,6 @@ export function SignalTabs({ companies }: SignalTabsProps) {
         </div>
       </div>
 
-      {/* Company Cards Grid */}
       {currentCompanies.length > 0 ? (
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
           {currentCompanies.slice(0, 16).map((company, index) => {
@@ -285,21 +284,7 @@ export function SignalTabs({ companies }: SignalTabsProps) {
         </div>
       )}
 
-      {/* CompanyDetail modal */}
       {selectedCompany && <CompanyDetail open={isModalOpen} onOpenChange={setIsModalOpen} company={selectedCompany} />}
     </div>
   )
-}
-
-function formatDate(dateString: string): string {
-  try {
-    const date = new Date(dateString)
-    return date.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    })
-  } catch {
-    return ""
-  }
 }
