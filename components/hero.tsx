@@ -187,7 +187,7 @@ export function Hero() {
       </div>
 
       <div className="container mx-auto px-6 lg:px-8 py-20 pb-2">
-        <div className="mx-auto max-w-4xl text-center my-6">
+        <div className="mx-auto max-w-4xl text-center my-6 mt-16">
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/5 px-4 py-1.5 text-sm text-primary backdrop-blur-sm shadow-[0_0_20px_rgba(96,165,250,0.15)]">
             <span className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75"></span>
