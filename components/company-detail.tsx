@@ -1,7 +1,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { StageBadge } from "@/components/stage-badge"
-import { MapPin, Users, TrendingUp, Star, Globe, Linkedin } from "lucide-react"
+import { MapPin, Users, TrendingUp, ExternalLink, Star, Lightbulb } from "lucide-react"
 
 interface CompanyDetailProps {
   open: boolean
@@ -28,9 +28,6 @@ interface CompanyDetailProps {
       glassdoorRating: number
     }
     whySurfaced: string[]
-    url?: string
-    linkedin?: string
-    glassdoor?: string
   }
 }
 
@@ -89,59 +86,55 @@ export function CompanyDetail({ open, onOpenChange, company }: CompanyDetailProp
           {/* External Links */}
           <div>
             <div className="flex flex-wrap gap-3">
-              {company.url &&
-                !company.url.includes("techcrunch") &&
-                !company.url.includes("venturebeat") &&
-                !company.url.includes("forbes") && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="border-[#2a2a2a] hover:bg-[#2a2a2a] text-white bg-transparent"
-                    asChild
-                  >
-                    <a href={company.url} target="_blank" rel="noopener noreferrer">
-                      <Globe className="h-4 w-4 mr-2" />
-                      Website
-                    </a>
-                  </Button>
-                )}
-
-              {company.linkedin && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="border-[#2a2a2a] hover:bg-[#2a2a2a] text-white bg-transparent"
-                  asChild
-                >
-                  <a href={company.linkedin} target="_blank" rel="noopener noreferrer">
-                    <Linkedin className="h-4 w-4 mr-2" />
-                    LinkedIn
-                  </a>
-                </Button>
-              )}
-
-              {company.glassdoor && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="border-[#2a2a2a] hover:bg-[#2a2a2a] text-white bg-transparent"
-                  asChild
-                >
-                  <a href={company.glassdoor} target="_blank" rel="noopener noreferrer">
-                    <Star className="h-4 w-4 mr-2" />
-                    Glassdoor
-                  </a>
-                </Button>
-              )}
+              <Button
+                variant="outline"
+                size="sm"
+                asChild
+                className="border-[#2a2a2a] hover:bg-[#2a2a2a] text-xs h-8 bg-transparent"
+              >
+                <a href={company.externalLinks.website} target="_blank" rel="noopener noreferrer">
+                  Website
+                  <ExternalLink className="h-3 w-3 ml-1" />
+                </a>
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                asChild
+                className="border-[#2a2a2a] hover:bg-[#2a2a2a] text-xs h-8 bg-transparent"
+              >
+                <a href={company.externalLinks.linkedin} target="_blank" rel="noopener noreferrer">
+                  LinkedIn
+                  <ExternalLink className="h-3 w-3 ml-1" />
+                </a>
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                asChild
+                className="border-[#2a2a2a] hover:bg-[#2a2a2a] text-xs h-8 gap-1 bg-transparent"
+              >
+                <a href={company.externalLinks.glassdoor} target="_blank" rel="noopener noreferrer">
+                  Glassdoor
+                  <Star className="h-3 w-3 fill-yellow-500 text-yellow-500" />
+                  <span>{company.externalLinks.glassdoorRating}</span>
+                </a>
+              </Button>
             </div>
           </div>
 
           {/* Open Design Roles */}
           <div>
-            <div className="space-y-3">{company.roles.map((role, index) => null)}</div>
+            
+            <div className="space-y-3">
+              {company.roles.map((role, index) => (
+                null
+              ))}
+            </div>
           </div>
 
           {/* Why Mina Surfaced This */}
+          
         </div>
       </DialogContent>
     </Dialog>

@@ -8,11 +8,58 @@ export async function searchCompanies(fundingStage: string, location: string, of
   }
 
   try {
-    const youResults = await searchWithYouAPI(fundingStage, location, offset, apiKey)
+    const locationName = location.replace("-", " ")
+    let stageName = ""
+    if (fundingStage === "series-c") stageName = "Series C"
+    else if (fundingStage === "series-d") stageName = "Series D"
+    else if (fundingStage === "series-e") stageName = "Series E"
 
-    console.log("[v0] You.com results:", youResults.length)
+    const queries = [
+      `${stageName} funding announcement ${locationName}`,
+      `startup raised ${stageName} round`,
+      `${stageName} venture capital ${locationName}`,
+      `${stageName} funding tech startup`,
+      `${locationName} ${stageName} startup funding`,
+    ]
 
-    const companies = youResults.slice(offset, offset + 9)
+    let allHits: any[] = []
+
+    for (const query of queries) {
+      const url = new URL("https://api.ydc-index.io/search")
+      url.searchParams.append("query", query)
+      url.searchParams.append("num_web_results", "10")
+      url.searchParams.append("safesearch", "moderate")
+
+      console.log("[v0] Calling You.com API with query:", query)
+
+      const response = await fetch(url.toString(), {
+        method: "GET",
+        headers: {
+          "X-API-Key": apiKey,
+        },
+      })
+
+      if (!response.ok) {
+        const errorBody = await response.text()
+        console.error("[v0] You.com API error:", response.status, errorBody)
+        continue
+      }
+
+      const data = await response.json()
+      console.log("[v0] You.com API response - hits:", data.hits?.length || 0)
+
+      if (data.hits && data.hits.length > 0) {
+        allHits = [...allHits, ...data.hits]
+        console.log("[v0] Total hits collected:", allHits.length)
+        if (allHits.length >= 30) break
+      }
+    }
+
+    if (allHits.length === 0) {
+      console.log("[v0] No results from You.com API, returning empty array")
+    }
+
+    const companies = parseHiringSignals(allHits, fundingStage, location, offset)
 
     return {
       success: true,
@@ -28,57 +75,6 @@ export async function searchCompanies(fundingStage: string, location: string, of
       error: error instanceof Error ? error.message : "Failed to search companies",
     }
   }
-}
-
-async function searchWithYouAPI(fundingStage: string, location: string, offset: number, apiKey: string) {
-  const locationName = location.replace("-", " ")
-  let stageName = ""
-  if (fundingStage === "series-c") stageName = "Series C"
-  else if (fundingStage === "series-d") stageName = "Series D"
-  else if (fundingStage === "series-e") stageName = "Series E"
-
-  const queries = [
-    `${stageName} funding announcement ${locationName}`,
-    `startup raised ${stageName} round`,
-    `${stageName} venture capital ${locationName}`,
-    `${stageName} funding tech startup`,
-    `${locationName} ${stageName} startup funding`,
-  ]
-
-  let allHits: any[] = []
-
-  for (const query of queries) {
-    const url = new URL("https://api.ydc-index.io/search")
-    url.searchParams.append("query", query)
-    url.searchParams.append("num_web_results", "10")
-    url.searchParams.append("safesearch", "moderate")
-
-    console.log("[v0] Calling You.com API with query:", query)
-
-    const response = await fetch(url.toString(), {
-      method: "GET",
-      headers: {
-        "X-API-Key": apiKey,
-      },
-    })
-
-    if (!response.ok) {
-      const errorBody = await response.text()
-      console.error("[v0] You.com API error:", response.status, errorBody)
-      continue
-    }
-
-    const data = await response.json()
-    console.log("[v0] You.com API response - hits:", data.hits?.length || 0)
-
-    if (data.hits && data.hits.length > 0) {
-      allHits = [...allHits, ...data.hits]
-      console.log("[v0] Total hits collected:", allHits.length)
-      if (allHits.length >= 30) break
-    }
-  }
-
-  return parseHiringSignals(allHits, fundingStage, location, offset)
 }
 
 function parseHiringSignals(hits: any[], fundingStage: string, location: string, offset: number) {
@@ -234,33 +230,6 @@ function parseHiringSignals(hits: any[], fundingStage: string, location: string,
       companyLocation = locationMatch[1]
     }
 
-    let companyWebsite = ""
-    try {
-      const urlObj = new URL(url)
-      const domain = urlObj.hostname.replace("www.", "")
-      if (
-        ![
-          "techcrunch.com",
-          "venturebeat.com",
-          "theinformation.com",
-          "forbes.com",
-          "bloomberg.com",
-          "crunchbase.com",
-        ].includes(domain)
-      ) {
-        companyWebsite = `https://${domain}`
-      }
-    } catch (e) {
-      // Invalid URL
-    }
-
-    const linkedinSlug = companyName
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-|-$/g, "")
-    const linkedinUrl = `https://www.linkedin.com/company/${linkedinSlug}`
-    const glassdoorUrl = `https://www.glassdoor.com/Search/results.htm?keyword=${encodeURIComponent(companyName)}`
-
     const company = {
       name: companyName,
       stage,
@@ -270,9 +239,7 @@ function parseHiringSignals(hits: any[], fundingStage: string, location: string,
       signals: signals.map((s) => s.text),
       signalCategories: signals.map((s) => s.category),
       postedDays,
-      url: companyWebsite || url,
-      linkedin: linkedinUrl,
-      glassdoor: glassdoorUrl,
+      url,
       description: description.substring(0, 200),
       source: url,
       date: new Date(Date.now() - postedDays * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
