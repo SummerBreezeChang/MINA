@@ -1,10 +1,11 @@
 "use server"
 
 export async function searchCompanies(fundingStage: string, location: string, offset = 0) {
-  const apiKey = process.env.YOU_API_KEY
+  const youApiKey = process.env.YOU_API_KEY
+  const serpApiKey = "5d50e01f5ac48ca7d4f14d35c15c69fe781e030b99f02ac2af13869aabc0fe75"
 
-  if (!apiKey) {
-    throw new Error("YOU_API_KEY is not configured")
+  if (!youApiKey) {
+    console.warn("[v0] YOU_API_KEY is not configured, using SerpApi only")
   }
 
   try {
@@ -14,21 +15,51 @@ export async function searchCompanies(fundingStage: string, location: string, of
     else if (fundingStage === "series-d") stageName = "Series D"
     else if (fundingStage === "series-e") stageName = "Series E"
 
-    const queries = [
-      `${stageName} funding announcement ${locationName}`,
-      `startup raised ${stageName} round`,
-      `${stageName} venture capital ${locationName}`,
-      `${stageName} funding tech startup`,
-      `${locationName} ${stageName} startup funding`,
-    ]
+    const [youResults, serpResults] = await Promise.all([
+      youApiKey ? searchWithYouAPI(youApiKey, stageName, locationName) : Promise.resolve([]),
+      searchWithSerpAPI(serpApiKey, stageName, locationName),
+    ])
 
-    let allHits: any[] = []
+    console.log("[v0] You.com results:", youResults.length, "SerpApi results:", serpResults.length)
 
-    for (const query of queries) {
-      const url = new URL("https://api.ydc-index.io/search")
+    const allHits = [...youResults, ...serpResults]
+
+    if (allHits.length === 0) {
+      console.log("[v0] No results from either API, returning empty array")
+    }
+
+    const companies = parseHiringSignals(allHits, fundingStage, location, offset)
+
+    return {
+      success: true,
+      companies,
+      hasMore: companies.length >= 9,
+    }
+  } catch (error) {
+    console.error("[v0] Error searching companies:", error)
+    return {
+      success: false,
+      companies: [],
+      hasMore: false,
+      error: error instanceof Error ? error.message : "Failed to search companies",
+    }
+  }
+}
+
+async function searchWithYouAPI(apiKey: string, stageName: string, locationName: string) {
+  const queries = [
+    `${stageName} funding announcement ${locationName}`,
+    `startup raised ${stageName} round`,
+    `${stageName} venture capital ${locationName}`,
+  ]
+
+  let allHits: any[] = []
+
+  for (const query of queries) {
+    try {
+      const url = new URL("https://api.ydc-index.io/v1/search")
       url.searchParams.append("query", query)
       url.searchParams.append("num_web_results", "10")
-      url.searchParams.append("safesearch", "moderate")
 
       console.log("[v0] Calling You.com API with query:", query)
 
@@ -50,31 +81,65 @@ export async function searchCompanies(fundingStage: string, location: string, of
 
       if (data.hits && data.hits.length > 0) {
         allHits = [...allHits, ...data.hits]
-        console.log("[v0] Total hits collected:", allHits.length)
-        if (allHits.length >= 30) break
+        if (allHits.length >= 20) break
       }
-    }
-
-    if (allHits.length === 0) {
-      console.log("[v0] No results from You.com API, returning empty array")
-    }
-
-    const companies = parseHiringSignals(allHits, fundingStage, location, offset)
-
-    return {
-      success: true,
-      companies,
-      hasMore: companies.length >= 9,
-    }
-  } catch (error) {
-    console.error("[v0] Error searching companies:", error)
-    return {
-      success: false,
-      companies: [],
-      hasMore: false,
-      error: error instanceof Error ? error.message : "Failed to search companies",
+    } catch (error) {
+      console.error("[v0] You.com API request failed:", error)
     }
   }
+
+  return allHits
+}
+
+async function searchWithSerpAPI(apiKey: string, stageName: string, locationName: string) {
+  const queries = [
+    `${stageName} funding ${locationName} startup`,
+    `${stageName} raised venture capital ${locationName}`,
+    `${locationName} ${stageName} tech company hiring`,
+  ]
+
+  let allResults: any[] = []
+
+  for (const query of queries) {
+    try {
+      const url = new URL("https://serpapi.com/search")
+      url.searchParams.append("q", query)
+      url.searchParams.append("api_key", apiKey)
+      url.searchParams.append("engine", "google")
+      url.searchParams.append("num", "10")
+      url.searchParams.append("tbm", "nws") // News search for recent announcements
+
+      console.log("[v0] Calling SerpApi with query:", query)
+
+      const response = await fetch(url.toString(), {
+        method: "GET",
+      })
+
+      if (!response.ok) {
+        const errorBody = await response.text()
+        console.error("[v0] SerpApi error:", response.status, errorBody)
+        continue
+      }
+
+      const data = await response.json()
+      const newsResults = data.news_results || []
+      console.log("[v0] SerpApi response - results:", newsResults.length)
+
+      const convertedResults = newsResults.map((result: any) => ({
+        title: result.title || "",
+        description: result.snippet || "",
+        url: result.link || "",
+        source: result.source || "",
+      }))
+
+      allResults = [...allResults, ...convertedResults]
+      if (allResults.length >= 20) break
+    } catch (error) {
+      console.error("[v0] SerpApi request failed:", error)
+    }
+  }
+
+  return allResults
 }
 
 function parseHiringSignals(hits: any[], fundingStage: string, location: string, offset: number) {
