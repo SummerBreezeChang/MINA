@@ -69,31 +69,31 @@ MINA demonstrates:
 ## 🚀 Quick Start
 
 ### Installation
-```bash
+\`\`\`bash
 git clone https://github.com/SummerBreezeChang/mina.git
 cd mina
 npm install
-```
+\`\`\`
 
 ### Environment Setup
 Create `.env.local`:
-```bash
+\`\`\`bash
 YOU_API_KEY=your-you-com-api-key
-```
+\`\`\`
 
 Get your API key from: https://api.you.com/
 
 ### Run Development Server
-```bash
+\`\`\`bash
 npm run dev
-```
+\`\`\`
 
 Visit: **http://localhost:3000/career**
 
 ---
 
 ## 📁 Project Structure
-```
+\`\`\`
 mina/
 ├── app/
 │   ├── api/
@@ -103,7 +103,7 @@ mina/
 │       └── page.tsx          # Career search page
 ├── components/               # React components
 └── README.md
-```
+\`\`\`
 
 ---
 
@@ -122,7 +122,7 @@ mina/
 5. Provide direct links to company websites
 
 ### Example Result:
-```
+\`\`\`
 Perplexity AI
 Series B • $73.6M • San Francisco, CA
 
@@ -130,7 +130,7 @@ AI-powered search engine. Recently raised Series B funding
 and is actively hiring for their design team.
 
 [Visit Website →] [Find Jobs]
-```
+\`\`\`
 
 ---
 
@@ -172,9 +172,9 @@ and is actively hiring for their design team.
 ## 🚢 Deployment
 
 ### Deploy to Vercel
-```bash
+\`\`\`bash
 vercel --prod
-```
+\`\`\`
 
 ### Add Environment Variable
 In Vercel Dashboard:
@@ -204,9 +204,9 @@ In Vercel Dashboard:
 ---
 
 ## 📝 Environment Variables
-```bash
+\`\`\`bash
 YOU_API_KEY=ydc-sk-xxxxx  # Required - Get from api.you.com
-```
+\`\`\`
 
 ---
 
