@@ -104,7 +104,7 @@ export default function ResultsPage() {
         <Header />
         <main className="container mx-auto px-6 lg:px-8 pt-24 pb-16">
           <div className="flex items-center justify-center min-h-[400px]">
-            <div className="text-center">
+            <div className="flex flex-col items-center">
               <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-primary" />
               <p className="text-muted-foreground">Searching for hiring signals via You.com API...</p>
             </div>

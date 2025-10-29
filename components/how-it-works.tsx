@@ -1,4 +1,4 @@
-import { Target, TrendingUp } from "lucide-react"
+import { Target, TrendingUp, Users } from "lucide-react"
 
 const steps = [
   {
@@ -13,12 +13,18 @@ const steps = [
     description:
       "See which Series C+ startups are actively growing design teams — and act before roles hit job boards.",
   },
+  {
+    icon: Users,
+    title: "Build Relationships with Employees",
+    description:
+      "Connect with designers and hiring managers at growing startups. Build meaningful relationships before applying to increase your chances of landing the role.",
+  },
 ]
 
 export function HowItWorks() {
   return (
     <section id="how-it-works" className="py-20 lg:py-32 relative">
-      <div className="container mx-auto px-6 lg:px-8">
+      <div className="container mx-auto px-6 lg:px-0">
         <div className="mx-auto mb-16 max-w-2xl text-center">
           <h2 className="text-balance text-3xl font-bold tracking-tight lg:text-5xl bg-gradient-to-br from-foreground to-primary bg-clip-text text-transparent px-0 mb-3 text-center">
             How Mina Works
@@ -26,11 +32,11 @@ export function HowItWorks() {
           <p className="text-pretty text-lg text-muted-foreground"></p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <div className="grid md:grid-cols-3 max-w-6xl mx-auto gap-12">
           {steps.map((step, index) => (
             <div key={index} className="relative group">
               {index < steps.length - 1 && (
-                <div className="hidden lg:block absolute top-6 left-[calc(100%+1rem)] w-8 h-0.5 bg-gradient-to-r from-primary/50 to-transparent" />
+                <div className="hidden md:block absolute top-6 left-[calc(100%+1rem)] w-8 h-0.5 bg-gradient-to-r from-primary/50 to-transparent" />
               )}
 
               <div className="mb-4 flex items-center gap-4">
