@@ -15,7 +15,7 @@ const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-sans"
 const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-sans" })
 
 export const metadata: Metadata = {
-  title: "Mina - Your Intelligent Shopping Agent",
+  title: "Mina - Startup Career Scout",
   description:
     "Find, compare, and recommend the best products for your business — fast, smart, and beautifully simple.",
   generator: "v0.app",
