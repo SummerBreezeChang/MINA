@@ -103,7 +103,7 @@ export default function ResultsPage() {
         </div>
         <Header />
         <main className="container mx-auto px-6 lg:px-8 pt-24 pb-16">
-          <div className="flex items-center justify-center min-h-[400px]">
+          <div className="flex items-center justify-center min-h-[400px] mt-10">
             <div className="flex flex-col items-center">
               <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-primary" />
               <p className="text-muted-foreground">Searching for hiring signals via You.com API...</p>
@@ -131,7 +131,7 @@ export default function ResultsPage() {
 
       <main className="container mx-auto px-6 lg:px-8 pt-24 pb-16">
         {/* Results Header */}
-        <div className="mb-8">
+        <div className="mb-8 mt-5">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
             <h1 className="text-3xl font-bold text-foreground">Results</h1>
 
