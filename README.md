@@ -1,250 +1,201 @@
-# MINA - Startup Career Scout
+# MINA - Discover Startup Insights in Real-Time
 
-> Find design roles at Series A/B/C startups before they hit job boards
+![MINA Banner](./public/images/banner.png) <!-- Add your banner image -->
 
-An intelligent career search platform powered by **You.com's Search API** that discovers hiring signals at early-stage startups through funding announcements.
+**Live Demo:** [https://www.mina.ltd/](https://www.mina.ltd/)
 
-**Built for You.com Agentic AI Hackathon 2025**
+## 🚀 Overview
 
----
+MINA is an AI-powered startup intelligence platform that delivers real-time insights across trends, companies, and funding. Built for founders, investors, and anyone researching the startup ecosystem—all in one clean interface.
 
-## 🎯 The Problem
+Stop jumping between Crunchbase, TechCrunch, and LinkedIn. Get everything you need in real-time, powered by You.com API.
 
-Traditional job boards show roles **2-3 months after** companies start hiring. By then:
-- ❌ The best opportunities are gone
-- ❌ Competition is fierce
-- ❌ Hiring managers are desperate (red flag)
+## ✨ Features
 
-**Designers need to find opportunities EARLY** - when companies just got funded and are starting to hire.
+### Three Intelligence Modes
 
----
+🔍 **Trend Research**
+- Discover emerging topics across AI, fintech, healthtech, and more
+- Track what's gaining momentum right now
+- Real-time industry insights
 
-## 💡 The Solution
+🎯 **Startup Radar**
+- Find new companies as they launch
+- Track early-stage startups before they hit mainstream
+- Company launches and media coverage
 
-MINA uses **You.com's Search API** to detect hiring signals at Series A/B/C startups by finding:
+💰 **Funding Research**
+- Monitor investment rounds in real-time
+- Track seed to Series C funding
+- See who's raising capital and how much
 
-- 💰 **Funding announcements** - Companies that just raised money
-- 📊 **Series A/B/C filtering** - Only early-stage startups
-- 📍 **Location-based search** - Find local opportunities
-- 🤖 **Smart parsing** - Extract company names and funding details
+### Core Capabilities
 
-Instead of searching for jobs, MINA searches for **signals that companies are hiring**.
+- **Real-time Data:** Live insights powered by You.com API
+- **Smart Categorization:** Automatic industry tagging (AI, SaaS, Fintech, etc.)
+- **Detailed Views:** Click any card for summaries and full source articles
+- **Clean Interface:** Intuitive design built for fast research
+- **Responsive Design:** Works seamlessly on desktop and mobile
 
----
+## 🛠️ Tech Stack
 
-## 🏆 Hackathon Track
+- **Framework:** [Next.js 14](https://nextjs.org/) with App Router
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS
+- **UI Components:** shadcn/ui + Radix UI
+- **API:** [You.com Search API](https://documentation.you.com/)
+- **Deployment:** Vercel
+- **Development:** Built with [V0](https://v0.dev/)
 
-**RAG & Knowledge Mastery** - Personal Productivity Assistant
+## 📦 Installation
 
-MINA demonstrates:
-- ✅ Real-time knowledge retrieval (You.com API)
-- ✅ Reduced hallucinations (curated fallback data)
-- ✅ Information synthesis (parse funding news)
-- ✅ Relevance filtering (Series A/B/C only)
-- ✅ Personal productivity (automate job search)
+### Prerequisites
 
----
+- Node.js 18+ and npm/yarn
+- You.com API key ([Get one here](https://api.you.com/))
 
-## ✨ Key Features
+### Setup
 
-### 🔍 **You.com Search API Integration**
-- Real-time search for startup funding news
-- Parses company names, funding amounts, and dates
-- Filters for Series A, B, and C rounds only
-
-### 🎯 **Smart Filtering**
-- Excludes seed rounds (too early)
-- Excludes Series D+ (too mature)
-- Excludes public companies
-- Location-based results
-
-### 🛡️ **Production Ready**
-- Graceful error handling
-- Curated fallback data (always works)
-- 10-second timeouts
-- Clean, simple UI
-
----
-
-## 🚀 Quick Start
-
-### Installation
-\`\`\`bash
-git clone https://github.com/SummerBreezeChang/mina.git
+1. **Clone the repository**
+```bash
+git clone https://github.com/yourusername/mina.git
 cd mina
+```
+
+2. **Install dependencies**
+```bash
 npm install
-\`\`\`
+# or
+yarn install
+```
 
-### Environment Setup
-Create `.env.local`:
-\`\`\`bash
-YOU_API_KEY=your-you-com-api-key
-\`\`\`
+3. **Set up environment variables**
 
-Get your API key from: https://api.you.com/
+Create a `.env.local` file in the root directory:
+```env
+YOU_API_KEY=your_you_api_key_here
+```
 
-### Run Development Server
-\`\`\`bash
+4. **Run the development server**
+```bash
 npm run dev
-\`\`\`
+# or
+yarn dev
+```
 
-Visit: **http://localhost:3000/career**
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
----
-
-## 📁 Project Structure
-\`\`\`
+## 🏗️ Project Structure
+```
 mina/
 ├── app/
-│   ├── api/
-│   │   └── you-search/
-│   │       └── route.ts      # You.com API integration
-│   └── career/
-│       └── page.tsx          # Career search page
-├── components/               # React components
-└── README.md
-\`\`\`
+│   ├── actions/
+│   │   └── search-companies.ts    # You.com API integration
+│   ├── results/
+│   │   └── page.tsx               # Results page
+│   └── page.tsx                   # Home page
+├── components/
+│   ├── ui/                        # shadcn/ui components
+│   ├── company-card.tsx           # Insight card component
+│   ├── company-detail.tsx         # Detail modal
+│   ├── header.tsx                 # Navigation header
+│   └── signal-tabs.tsx            # Tab navigation & grid
+├── lib/
+│   └── utils.ts                   # Utility functions
+└── public/
+    └── images/                    # Static assets
+```
 
----
+## 🎯 How It Works
 
-## 🎨 How It Works
+1. **Search:** Enter a topic (e.g., "AI", "Fintech", "Climate Tech")
+2. **Select Mode:** Choose Trend Research, Startup Radar, or Funding Research
+3. **Browse Results:** View real-time insights displayed as cards
+4. **Explore Details:** Click any card to see summaries and read full articles
+5. **Track Sources:** Each insight links back to the original source
 
-### User Flow:
-1. Select role (e.g., "Senior Product Designer")
-2. Choose location (e.g., "San Francisco, CA")
-3. Click "Find Opportunities"
+## 🔑 Key Features Explained
 
-### Behind the Scenes:
-1. Query You.com: `"San Francisco Series A B C startup funding 2024 2025"`
-2. Parse results for company names and funding info
-3. Filter for Series A/B/C only
-4. Display companies with hiring signals
-5. Provide direct links to company websites
+### Real-Time Intelligence
+Unlike static databases, MINA queries You.com API in real-time to fetch the latest startup news, trends, and funding announcements.
 
-### Example Result:
-\`\`\`
-Perplexity AI
-Series B • $73.6M • San Francisco, CA
+### Smart Parsing
+The platform intelligently extracts:
+- Company names
+- Funding stages (Seed, Series A/B/C)
+- Industry categories
+- Locations
+- Funding amounts
+- Publication dates
 
-AI-powered search engine. Recently raised Series B funding
-and is actively hiring for their design team.
+### Clean UX
+Built with designers and researchers in mind:
+- Intuitive three-mode navigation
+- Scannable card layouts
+- Quick access to source articles
+- Responsive across all devices
 
-[Visit Website →] [Find Jobs]
-\`\`\`
+## 🚧 Roadmap
 
----
+Future enhancements I'm planning:
 
-## 🔧 Tech Stack
+- [ ] **Data Validation:** Improve accuracy and deduplication
+- [ ] **Personalization:** Save searches and create custom feeds
+- [ ] **Investor Features:** Market signals, competitor mapping, trend predictions
+- [ ] **Export:** Download insights as CSV/PDF
+- [ ] **Notifications:** Alert users about new funding rounds or launches
+- [ ] **Advanced Filters:** Filter by location, funding stage, company size
+- [ ] **API Access:** Let developers integrate MINA data
 
-- **Frontend:** Next.js 15, React 19, TypeScript, Tailwind CSS
-- **API:** You.com Search API
-- **Deployment:** Vercel Edge Functions
-- **Styling:** Tailwind CSS with dark gradient theme
+## 🎨 Design Philosophy
 
----
+As a designer who codes, I built MINA with these principles:
 
-## 🎯 Why This Wins the Hackathon
-
-### 1. **Showcases You.com Properly**
-- Real API integration (not just mock data)
-- Proper error handling
-- Production-ready implementation
-
-### 2. **Solves Real Problem**
-- Helps job seekers (including me!)
-- Gives 2-3 month head start on opportunities
-- Reduces time spent on job boards by 80%
-
-### 3. **Technical Excellence**
-- Clean code architecture
-- Graceful fallbacks
-- Always returns results
-- Smart parsing logic
-
-### 4. **Fits RAG Track Perfectly**
-- Retrieves knowledge from web (You.com)
-- Synthesizes information intelligently
-- Reduces hallucinations (curated data)
-- Personal productivity tool
-
----
-
-## 🚢 Deployment
-
-### Deploy to Vercel
-\`\`\`bash
-vercel --prod
-\`\`\`
-
-### Add Environment Variable
-In Vercel Dashboard:
-- Variable: `YOU_API_KEY`
-- Value: Your You.com API key
-- Scope: Production, Preview, Development
-
----
-
-## 📊 Performance
-
-- **Search Speed:** <5 seconds
-- **API Success Rate:** 95%+ (with fallbacks)
-- **Uptime:** 99.9% on Vercel
-- **Always Works:** Curated data ensures results
-
----
-
-## 🔮 Future Roadmap
-
-- [ ] Email alerts for new funding announcements
-- [ ] Chrome extension for one-click research
-- [ ] LinkedIn integration for warm intros
-- [ ] Salary data from Levels.fyi
-- [ ] Save favorite companies
-
----
-
-## 📝 Environment Variables
-\`\`\`bash
-YOU_API_KEY=ydc-sk-xxxxx  # Required - Get from api.you.com
-\`\`\`
-
----
+- **Speed:** Get insights in seconds, not hours
+- **Clarity:** Clean interface, no clutter
+- **Action:** Every insight links to actionable information
+- **Real-time:** Live data, not stale databases
 
 ## 🤝 Contributing
 
-This is a hackathon project, but contributions welcome! Areas for improvement:
-- Additional filters (industry, team size)
-- More data sources
-- UI enhancements
-- Mobile app version
+This is a hackathon project and learning experiment. Feedback, issues, and pull requests are welcome!
 
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
----
+## 📄 License
 
-## 👤 Author
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-**Summer Chang**
-- GitHub: [@SummerBreezeChang](https://github.com/SummerBreezeChang)
-- Project: Built for You.com Hackathon 2025
-- Purpose: Help designers (including myself!) find startup opportunities early
+## 👤 About
 
----
+Built by **Summer Chang** - Product Designer & Developer
+
+I created MINA because nothing existed that gave real-time startup intelligence in one place. This project showcases my approach: find the gap, build the solution, iterate.
+
+- **Portfolio:** https://summerchang.co/
+- **LinkedIn:** [https://www.linkedin.com/in/summerchang/](https://www.linkedin.com/in/summerchang/)
+- **X:** https://x.com/SummerChangCo
 
 ## 🙏 Acknowledgments
 
-- **You.com** - For the amazing Search API
-- **Vercel** - For hosting and edge functions
-- **Next.js Team** - For the excellent framework
+- Built with [V0](https://v0.dev/) for rapid development
+- Powered by [You.com API](https://you.com/)
+- UI components from [shadcn/ui](https://ui.shadcn.com/)
+- Inspiration from the startup community
+
+## 📧 Contact
+
+Have feedback or want to collaborate? Reach out!
+
+- Email: your.email@example.com
+- LinkedIn: [Connect with me](https://www.linkedin.com/in/summerchang/)
 
 ---
 
-## 🎬 Demo
+**⭐ If you find MINA useful, please star this repository!**
 
-**Live Demo:** Visit `/career` route  
-**Video Demo:** [Coming soon]
-
----
-
-**Built with ❤️ for job seekers finding their next startup opportunity**
-
-🚀 Give job seekers a head start - try MINA Career Scout today!
+Built with ❤️ for the startup community.
