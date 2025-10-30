@@ -136,7 +136,7 @@ export function CompanyDetail({ open, onOpenChange, insight, company }: CompanyD
                   className="w-full border-[#2a2a2a] hover:bg-transparent hover:text-foreground hover:border-[#2a2a2a] bg-transparent hover:scale-[1.2] transition-transform duration-200"
                 >
                   <a href={publisherLinkedIn} target="_blank" rel="noopener noreferrer">
-                    <Linkedin className="h-4 w-4 mr-2" />
+                    
                     LinkedIn
                   </a>
                 </Button>
