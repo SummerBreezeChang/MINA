@@ -1,140 +1,138 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { StageBadge } from "@/components/stage-badge"
-import { MapPin, Users, TrendingUp, ExternalLink, Star, Lightbulb } from "lucide-react"
+import { ExternalLink, TrendingUp, Rocket, Building2, Globe, Linkedin } from "lucide-react"
 
 interface CompanyDetailProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  company: {
-    name: string
-    stage: "Series C" | "Series D" | "Series E+" | "Series E"
-    location: string
-    employees: number
-    roles: Array<{
-      title: string
-      postedDays: number
-      linkedinUrl: string
-      greenhouseUrl?: string
-    }>
-    signals: Array<{
-      type: "funding" | "hire" | "growth" | "product" | "team"
-      text: string
-    }>
-    externalLinks: {
-      website: string
-      linkedin: string
-      glassdoor: string
-      glassdoorRating: number
-    }
-    whySurfaced: string[]
+  insight?: {
+    companyName: string
+    headline: string
+    summary: string
+    source: string
+    sourceUrl: string
+    companyWebsite?: string
+    companyLinkedIn?: string
+    category: string
+    mode: string
+    publishedDate: string
+    topic: string
+    fundingStage?: string
+    location?: string
+    companySize?: string
+    fundingAmount?: string
   }
+  company?: any // For backward compatibility
 }
 
-export function CompanyDetail({ open, onOpenChange, company }: CompanyDetailProps) {
-  const getSignalIcon = (type: string) => {
-    switch (type) {
+export function CompanyDetail({ open, onOpenChange, insight, company }: CompanyDetailProps) {
+  const data = insight || company
+
+  if (!data) return null
+
+  const getModeIcon = (mode: string) => {
+    switch (mode) {
+      case "trend":
+        return <TrendingUp className="h-5 w-5 text-blue-400" />
+      case "startup":
+        return <Rocket className="h-5 w-5 text-green-400" />
       case "funding":
-        return "🚀"
-      case "hire":
-      case "team":
-        return "👔"
-      case "growth":
-        return "📈"
-      case "product":
-        return "🎯"
+        return <Building2 className="h-5 w-5 text-yellow-400" />
       default:
-        return "✨"
+        return <TrendingUp className="h-5 w-5" />
+    }
+  }
+
+  const getModeLabel = (mode: string) => {
+    switch (mode) {
+      case "trend":
+        return "Trend Research"
+      case "startup":
+        return "Startup Radar"
+      case "funding":
+        return "Funding Research"
+      default:
+        return mode
     }
   }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-[#0a0a0a] border-[#2a2a2a] text-foreground">
+      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto bg-[#0a0a0a] border-[#2a2a2a] text-foreground">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-white">{company.name}</DialogTitle>
-          <div className="flex items-center gap-3 flex-wrap mt-2">
-            <StageBadge stage={company.stage} />
-            <span className="text-sm text-gray-400 flex items-center gap-1">
-              <MapPin className="h-3.5 w-3.5" />
-              {company.location}
-            </span>
-            <span className="text-sm text-gray-400 flex items-center gap-1">
-              <Users className="h-3.5 w-3.5" />
-              {company.employees} employees
-            </span>
-          </div>
+          <DialogTitle className="text-2xl font-bold text-white pr-8">{data.companyName}</DialogTitle>
+          <DialogDescription className="text-gray-400">{data.headline}</DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-6 mt-6">
-          {/* Growth Signals */}
-          <div>
-            <h3 className="text-base font-semibold mb-3 flex items-center gap-2 text-white">
-              <TrendingUp className="h-4 w-4" />
-              Growth Signals
-            </h3>
-            <div className="space-y-2">
-              {company.signals.map((signal, index) => (
-                <div key={index} className="flex items-start gap-3 text-sm">
-                  <span className="text-base">{getSignalIcon(signal.type)}</span>
-                  <span className="text-gray-300">{signal.text}</span>
-                </div>
-              ))}
+        <div className="mt-6 space-y-4">
+          <div className="p-4 rounded-lg bg-yellow-500/10 border border-yellow-500/20">
+            <div className="flex items-center gap-2 mb-2">
+              <TrendingUp className="h-4 w-4 text-yellow-400" />
+              <h3 className="text-sm font-semibold text-yellow-400">Key Signal</h3>
+            </div>
+            <p className="text-base font-medium text-white mb-1">
+              {data.fundingAmount ? `Raised ${data.fundingAmount}` : data.headline}
+            </p>
+            <p className="text-sm text-gray-300">{data.publishedDate}</p>
+          </div>
+
+          {/* Links Section */}
+          <div className="pt-4 border-t border-[#2a2a2a] border-none">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {data.companyWebsite && (
+                <Button
+                  asChild
+                  variant="outline"
+                  className="w-full border-[#2a2a2a] hover:bg-transparent hover:text-foreground bg-transparent hover:scale-[1.2] transition-transform duration-200"
+                >
+                  <a href={data.companyWebsite} target="_blank" rel="noopener noreferrer">
+                    <Globe className="h-4 w-4 mr-2" />
+                    Website
+                  </a>
+                </Button>
+              )}
+              {data.companyLinkedIn && (
+                <Button
+                  asChild
+                  variant="outline"
+                  className="w-full border-[#2a2a2a] hover:bg-transparent hover:text-foreground bg-transparent hover:scale-[1.2] transition-transform duration-200"
+                >
+                  <a href={data.companyLinkedIn} target="_blank" rel="noopener noreferrer">
+                    
+                    LinkedIn
+                  </a>
+                </Button>
+              )}
+              {data.sourceUrl && (
+                <Button
+                  asChild
+                  className="w-full bg-yellow-400 hover:bg-yellow-400 hover:text-black text-black font-semibold hover:scale-[1.2] transition-transform duration-200"
+                >
+                  <a href={data.sourceUrl} target="_blank" rel="noopener noreferrer">
+                    
+                    Read Full Article
+                  </a>
+                </Button>
+              )}
             </div>
           </div>
 
-          {/* External Links */}
+          {/* Category Tags */}
+
+          {/* Summary */}
           <div>
-            <div className="flex flex-wrap gap-3">
-              <Button
-                variant="outline"
-                size="sm"
-                asChild
-                className="border-[#2a2a2a] hover:bg-[#2a2a2a] text-xs h-8 bg-transparent"
-              >
-                <a href={company.externalLinks.website} target="_blank" rel="noopener noreferrer">
-                  Website
-                  <ExternalLink className="h-3 w-3 ml-1" />
-                </a>
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                asChild
-                className="border-[#2a2a2a] hover:bg-[#2a2a2a] text-xs h-8 bg-transparent"
-              >
-                <a href={company.externalLinks.linkedin} target="_blank" rel="noopener noreferrer">
-                  LinkedIn
-                  <ExternalLink className="h-3 w-3 ml-1" />
-                </a>
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                asChild
-                className="border-[#2a2a2a] hover:bg-[#2a2a2a] text-xs h-8 gap-1 bg-transparent"
-              >
-                <a href={company.externalLinks.glassdoor} target="_blank" rel="noopener noreferrer">
-                  Glassdoor
-                  <Star className="h-3 w-3 fill-yellow-500 text-yellow-500" />
-                  <span>{company.externalLinks.glassdoorRating}</span>
-                </a>
-              </Button>
-            </div>
+            <h3 className="text-base font-semibold mb-3 text-white">Summary</h3>
+            <p className="text-gray-300 leading-relaxed">{data.summary}</p>
           </div>
 
-          {/* Open Design Roles */}
+          {/* Source Information */}
           <div>
-            
-            <div className="space-y-3">
-              {company.roles.map((role, index) => (
-                null
-              ))}
+            <h3 className="text-base font-semibold mb-3 text-white">Source</h3>
+            <div className="flex items-center gap-2 text-sm text-gray-400">
+              <span>Published by</span>
+              <span className="font-medium text-gray-300">{data.source}</span>
             </div>
           </div>
-
-          {/* Why Mina Surfaced This */}
-          
         </div>
       </DialogContent>
     </Dialog>

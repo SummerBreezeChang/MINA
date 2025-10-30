@@ -13,7 +13,7 @@ interface SignalCompany {
 }
 
 interface SignalTabsProps {
-  companies: any[]
+  insights: any[]
 }
 
 function categorizeIndustry(companyName: string, description: string): string {
@@ -161,82 +161,29 @@ function categorizeIndustry(companyName: string, description: string): string {
   return "Enterprise"
 }
 
-export function SignalTabs({ companies }: SignalTabsProps) {
-  const [activeTab, setActiveTab] = useState<"funding" | "team" | "product">("funding")
-  const [selectedCompany, setSelectedCompany] = useState<any>(null)
+export function SignalTabs({ insights }: SignalTabsProps) {
+  const [activeTab, setActiveTab] = useState<"trend" | "startup" | "funding">("trend")
+  const [selectedInsight, setSelectedInsight] = useState<any>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const categorizedCompanies = {
-    funding: companies
-      .filter((c) => c.signalCategories?.includes("funding"))
-      .map((c) => ({
-        name: c.name,
-        fundingInfo: c.signals.find((s: string) => s.includes("$") || s.includes("funding")) || c.signals[0],
-        description: c.description || `${c.name}, a leading tech company, secured significant funding...`,
-        fundingDate: c.date ? formatDate(c.date) : "",
-        industry: categorizeIndustry(c.name, c.description || ""),
-      })),
-    team: companies
-      .filter((c) => c.signalCategories?.includes("team"))
-      .map((c) => ({
-        name: c.name,
-        fundingInfo: c.signals.find((s: string) => s.includes("Hired") || s.includes("expansion")) || c.signals[0],
-        description: c.description || `${c.name} is expanding their design team with key leadership hires...`,
-        fundingDate: c.date ? formatDate(c.date) : "",
-        industry: categorizeIndustry(c.name, c.description || ""),
-      })),
-    product: companies
-      .filter((c) => c.signalCategories?.includes("product"))
-      .map((c) => ({
-        name: c.name,
-        fundingInfo: c.signals.find((s: string) => s.includes("launch") || s.includes("product")) || c.signals[0],
-        description: c.description || `${c.name} recently launched a new product, indicating growth...`,
-        fundingDate: c.date ? formatDate(c.date) : "",
-        industry: categorizeIndustry(c.name, c.description || ""),
-      })),
+  const categorizedInsights = {
+    trend: insights.filter((i) => i.mode === "trend"),
+    startup: insights.filter((i) => i.mode === "startup"),
+    funding: insights.filter((i) => i.mode === "funding"),
   }
 
   const tabs = [
-    { id: "funding" as const, label: "Funding Signals", count: categorizedCompanies.funding.length },
-    { id: "team" as const, label: "Team Growth", count: categorizedCompanies.team.length },
-    { id: "product" as const, label: "Product Launches", count: categorizedCompanies.product.length },
+    { id: "trend" as const, label: "Trend Research", count: categorizedInsights.trend.length },
+    { id: "startup" as const, label: "Startup Radar", count: categorizedInsights.startup.length },
+    { id: "funding" as const, label: "Funding Research", count: categorizedInsights.funding.length },
   ]
 
-  const handleCompanyClick = (company: SignalCompany, originalCompany: any) => {
-    const modalData = {
-      name: company.name,
-      stage: originalCompany.stage,
-      location: originalCompany.location || "San Francisco, CA",
-      employees: originalCompany.employees,
-      roles: [
-        {
-          title: "Design roles opening soon",
-          postedDays: originalCompany.postedDays || 18,
-          linkedinUrl: `https://www.linkedin.com/company/${company.name.toLowerCase().replace(/\s+/g, "-")}/jobs/`,
-          greenhouseUrl: originalCompany.url,
-        },
-      ],
-      signals: originalCompany.signals.map((signal: string, idx: number) => ({
-        type: originalCompany.signalCategories?.[idx] || "funding",
-        text: signal,
-      })),
-      externalLinks: {
-        website: originalCompany.url || `https://${company.name.toLowerCase().replace(/\s+/g, "")}.com`,
-        linkedin: `https://www.linkedin.com/company/${company.name.toLowerCase().replace(/\s+/g, "-")}/`,
-        glassdoor: `https://www.glassdoor.com/Overview/Working-at-${company.name.replace(/\s+/g, "-")}.htm`,
-        glassdoorRating: 4.5,
-      },
-      whySurfaced: [
-        `${originalCompany.stage} company with strong funding and growth trajectory`,
-        `Recently expanded design team by ${Math.floor(Math.random() * 50) + 10}%`,
-        `Active hiring in design roles with competitive compensation`,
-      ],
-    }
-    setSelectedCompany(modalData)
+  const handleInsightClick = (insight: any) => {
+    setSelectedInsight(insight)
     setIsModalOpen(true)
   }
 
-  const currentCompanies = categorizedCompanies[activeTab]
+  const currentInsights = categorizedInsights[activeTab]
 
   return (
     <div className="mb-12">
@@ -259,34 +206,31 @@ export function SignalTabs({ companies }: SignalTabsProps) {
       </div>
 
       {/* Company Cards Grid */}
-      {currentCompanies.length > 0 ? (
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
-          {currentCompanies.slice(0, 16).map((company, index) => {
-            const originalCompany = companies.find((c) => c.name === company.name)
-            return (
-              <div
-                key={index}
-                onClick={() => handleCompanyClick(company, originalCompany)}
-                className="p-4 rounded-lg border border-primary/20 bg-background/50 backdrop-blur-sm hover:border-primary/40 transition-all cursor-pointer hover:shadow-lg hover:scale-105"
-              >
-                <div className="flex items-start gap-2 mb-3">
-                  <h3 className="font-semibold text-foreground">{company.name}</h3>
-                </div>
-                <p className="text-sm font-medium text-yellow-500 mb-2">{company.fundingInfo}</p>
-                <p className="text-sm text-muted-foreground mb-3">{company.industry}</p>
-                {company.fundingDate && <p className="text-xs text-muted-foreground">{company.fundingDate}</p>}
+      {currentInsights.length > 0 ? (
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+          {currentInsights.slice(0, 18).map((insight, index) => (
+            <div
+              key={index}
+              onClick={() => handleInsightClick(insight)}
+              className="p-4 rounded-lg border border-primary/20 bg-background/50 backdrop-blur-sm hover:border-primary/40 transition-all cursor-pointer hover:shadow-lg hover:scale-105"
+            >
+              <div className="flex items-start gap-2 mb-3">
+                <h3 className="font-semibold text-foreground">{insight.companyName}</h3>
               </div>
-            )
-          })}
+              <p className="text-sm font-medium text-yellow-500 mb-2">{insight.category}</p>
+              <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{insight.headline}</p>
+              <p className="text-xs text-muted-foreground">{insight.source}</p>
+            </div>
+          ))}
         </div>
       ) : (
         <div className="text-center py-12 text-muted-foreground">
-          <p>No {activeTab} signals found. Try different search criteria.</p>
+          <p>No {activeTab} insights found. Try different search criteria.</p>
         </div>
       )}
 
       {/* CompanyDetail modal */}
-      {selectedCompany && <CompanyDetail open={isModalOpen} onOpenChange={setIsModalOpen} company={selectedCompany} />}
+      {selectedInsight && <CompanyDetail open={isModalOpen} onOpenChange={setIsModalOpen} company={selectedInsight} />}
     </div>
   )
 }

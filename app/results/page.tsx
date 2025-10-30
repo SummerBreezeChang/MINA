@@ -7,18 +7,18 @@ import { CompanyCard } from "@/components/company-card"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { FileSpreadsheet, Loader2 } from "lucide-react"
-import { searchCompanies } from "../actions/search-companies"
+import { searchStartups } from "../actions/search-companies"
 import { SignalTabs } from "@/components/signal-tabs"
 
-const formatFundingStage = (stage: string) => {
-  return stage
+const formatMode = (mode: string) => {
+  return mode
     .split("-")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ")
 }
 
-const formatLocation = (location: string) => {
-  return location
+const formatTopic = (topic: string) => {
+  return topic
     .split("-")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ")
@@ -26,10 +26,10 @@ const formatLocation = (location: string) => {
 
 export default function ResultsPage() {
   const searchParams = useSearchParams()
-  const fundingStage = searchParams.get("fundingStage") || "series-c"
-  const location = searchParams.get("location") || "san-francisco"
+  const mode = searchParams.get("mode") || "trend"
+  const topic = searchParams.get("topic") || "AI"
 
-  const [companies, setCompanies] = useState<any[]>([])
+  const [insights, setInsights] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [loadingMore, setLoadingMore] = useState(false)
   const [hasMore, setHasMore] = useState(true)
@@ -37,52 +37,52 @@ export default function ResultsPage() {
 
   useEffect(() => {
     const loadInitialResults = async () => {
-      console.log("[v0] Loading initial results for:", { fundingStage, location })
+      console.log("[v0] Loading initial results for:", { mode, topic })
       setLoading(true)
       setError(null)
 
       try {
-        const result = await searchCompanies(fundingStage, location, 0)
+        const result = await searchStartups(mode, topic, 0)
 
         if (result.success) {
-          console.log("[v0] Initial results loaded:", result.companies.length, "companies")
-          setCompanies(result.companies)
+          console.log("[v0] Initial results loaded:", result.insights.length, "insights")
+          setInsights(result.insights)
           setHasMore(result.hasMore)
 
-          if (result.companies.length === 0) {
-            setError("No companies found. Try different search criteria or check back later.")
+          if (result.insights.length === 0) {
+            setError("No insights found. Try different search criteria or check back later.")
           }
         } else {
-          setError(result.error || "Failed to load companies")
+          setError(result.error || "Failed to load insights")
         }
       } catch (err) {
         console.error("[v0] Error loading initial results:", err)
-        setError("Failed to load companies")
+        setError("Failed to load insights")
       } finally {
         setLoading(false)
       }
     }
 
     loadInitialResults()
-  }, [fundingStage, location])
+  }, [mode, topic])
 
   const handleLoadMore = async () => {
     setLoadingMore(true)
     setError(null)
 
     try {
-      const result = await searchCompanies(fundingStage, location, companies.length)
+      const result = await searchStartups(mode, topic, insights.length)
 
-      if (result.success && result.companies.length > 0) {
-        setCompanies([...companies, ...result.companies])
+      if (result.success && result.insights.length > 0) {
+        setInsights([...insights, ...result.insights])
         setHasMore(result.hasMore)
       } else {
-        setError(result.error || "No more companies found")
+        setError(result.error || "No more insights found")
         setHasMore(false)
       }
     } catch (err) {
-      console.error("[v0] Error loading more companies:", err)
-      setError("Failed to load more companies")
+      console.error("[v0] Error loading more insights:", err)
+      setError("Failed to load more insights")
     } finally {
       setLoadingMore(false)
     }
@@ -106,7 +106,7 @@ export default function ResultsPage() {
           <div className="flex items-center justify-center min-h-[400px] mt-10">
             <div className="flex flex-col items-center">
               <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-primary" />
-              <p className="text-muted-foreground">Searching for hiring signals via You.com API...</p>
+              <p className="text-muted-foreground">Searching for startup insights via You.com API...</p>
             </div>
           </div>
         </main>
@@ -141,10 +141,9 @@ export default function ResultsPage() {
                   <SelectValue placeholder="Sort by" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="newest">Newest Signals</SelectItem>
-                  <SelectItem value="oldest">Oldest Signals</SelectItem>
-                  <SelectItem value="funding">Funding Stage</SelectItem>
-                  <SelectItem value="size">Company Size</SelectItem>
+                  <SelectItem value="newest">Newest First</SelectItem>
+                  <SelectItem value="oldest">Oldest First</SelectItem>
+                  <SelectItem value="relevance">Most Relevant</SelectItem>
                 </SelectContent>
               </Select>
 
@@ -156,28 +155,28 @@ export default function ResultsPage() {
           </div>
 
           <p className="text-sm text-muted-foreground">
-            Real-time hiring signals powered by You.com API • Tracking funding, leadership hires, and product launches
+            Real-time startup intelligence powered by You.com API • Tracking trends, activity, and funding
           </p>
         </div>
 
         {/* Signal Tabs Section */}
-        {companies.length > 0 && <SignalTabs companies={companies} />}
+        {insights.length > 0 && <SignalTabs insights={insights} />}
 
         {/* Company Cards */}
-        {companies.length > 0 ? (
+        {insights.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {companies.map((company, index) => (
-              <CompanyCard key={`${company.name}-${index}`} company={company} />
+            {insights.map((insight, index) => (
+              <CompanyCard key={`${insight.companyName}-${index}`} insight={insight} />
             ))}
           </div>
         ) : (
           <div className="text-center py-12">
-            <p className="text-muted-foreground">No companies found. Try different search criteria.</p>
+            <p className="text-muted-foreground">No insights found. Try different search criteria.</p>
           </div>
         )}
 
         {/* Load More */}
-        {companies.length > 0 && (
+        {insights.length > 0 && (
           <div className="mt-8 text-center">
             {error && <p className="text-sm text-red-500 mb-4">{error}</p>}
             {hasMore && (
@@ -194,11 +193,11 @@ export default function ResultsPage() {
                     Loading...
                   </>
                 ) : (
-                  "Load More Companies"
+                  "Load More Insights"
                 )}
               </Button>
             )}
-            {!hasMore && !error && <p className="text-sm text-muted-foreground">No more companies to load</p>}
+            {!hasMore && !error && <p className="text-sm text-muted-foreground">No more insights to load</p>}
           </div>
         )}
       </main>
