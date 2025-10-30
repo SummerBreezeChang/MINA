@@ -1,6 +1,6 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { ExternalLink, TrendingUp, Rocket, Building2, Globe, Linkedin } from "lucide-react"
+import { TrendingUp, Rocket, Building2, Globe, Linkedin } from "lucide-react"
 
 interface CompanyDetailProps {
   open: boolean
@@ -25,10 +25,46 @@ interface CompanyDetailProps {
   company?: any // For backward compatibility
 }
 
+function getPublisherLinkedIn(publisherName: string): string | null {
+  const publisherMap: Record<string, string> = {
+    techcrunch: "https://www.linkedin.com/company/techcrunch/",
+    mckinsey: "https://www.linkedin.com/company/mckinsey/",
+    forbes: "https://www.linkedin.com/company/forbes-magazine/",
+    bloomberg: "https://www.linkedin.com/company/bloomberg/",
+    venturebeat: "https://www.linkedin.com/company/venturebeat/",
+    crunchbase: "https://www.linkedin.com/company/crunchbase/",
+    reuters: "https://www.linkedin.com/company/thomson-reuters/",
+    wsj: "https://www.linkedin.com/company/the-wall-street-journal/",
+    nytimes: "https://www.linkedin.com/company/the-new-york-times/",
+    cnbc: "https://www.linkedin.com/company/cnbc/",
+    wired: "https://www.linkedin.com/company/wired/",
+    theverge: "https://www.linkedin.com/company/the-verge/",
+    techradar: "https://www.linkedin.com/company/techradar/",
+    mashable: "https://www.linkedin.com/company/mashable/",
+    engadget: "https://www.linkedin.com/company/engadget/",
+    arstechnica: "https://www.linkedin.com/company/ars-technica/",
+    businessinsider: "https://www.linkedin.com/company/businessinsider/",
+    fastcompany: "https://www.linkedin.com/company/fast-company/",
+    inc: "https://www.linkedin.com/company/inc-magazine/",
+    entrepreneur: "https://www.linkedin.com/company/entrepreneur-media/",
+    fortune: "https://www.linkedin.com/company/fortune-magazine/",
+    axios: "https://www.linkedin.com/company/axios/",
+    theinformation: "https://www.linkedin.com/company/the-information/",
+    protocol: "https://www.linkedin.com/company/protocol/",
+    sifted: "https://www.linkedin.com/company/sifted/",
+    techeu: "https://www.linkedin.com/company/tech-eu/",
+  }
+
+  const normalizedName = publisherName.toLowerCase().replace(/\s+/g, "")
+  return publisherMap[normalizedName] || null
+}
+
 export function CompanyDetail({ open, onOpenChange, insight, company }: CompanyDetailProps) {
   const data = insight || company
 
   if (!data) return null
+
+  const publisherLinkedIn = getPublisherLinkedIn(data.source)
 
   const getModeIcon = (mode: string) => {
     switch (mode) {
@@ -61,7 +97,9 @@ export function CompanyDetail({ open, onOpenChange, insight, company }: CompanyD
       <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto bg-[#0a0a0a] border-[#2a2a2a] text-foreground">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-white pr-8">{data.companyName}</DialogTitle>
-          <DialogDescription className="text-gray-400">{data.headline}</DialogDescription>
+          <DialogDescription className="text-gray-400">
+            {data.headline || data.summary || "Article details and insights"}
+          </DialogDescription>
         </DialogHeader>
 
         <div className="mt-6 space-y-4">
@@ -83,7 +121,7 @@ export function CompanyDetail({ open, onOpenChange, insight, company }: CompanyD
                 <Button
                   asChild
                   variant="outline"
-                  className="w-full border-[#2a2a2a] hover:bg-transparent hover:text-foreground bg-transparent hover:scale-[1.2] transition-transform duration-200"
+                  className="w-full border-[#2a2a2a] hover:bg-transparent hover:text-foreground hover:border-[#2a2a2a] bg-transparent hover:scale-[1.2] transition-transform duration-200"
                 >
                   <a href={data.companyWebsite} target="_blank" rel="noopener noreferrer">
                     <Globe className="h-4 w-4 mr-2" />
@@ -91,14 +129,14 @@ export function CompanyDetail({ open, onOpenChange, insight, company }: CompanyD
                   </a>
                 </Button>
               )}
-              {data.companyLinkedIn && (
+              {publisherLinkedIn && (
                 <Button
                   asChild
                   variant="outline"
-                  className="w-full border-[#2a2a2a] hover:bg-transparent hover:text-foreground bg-transparent hover:scale-[1.2] transition-transform duration-200"
+                  className="w-full border-[#2a2a2a] hover:bg-transparent hover:text-foreground hover:border-[#2a2a2a] bg-transparent hover:scale-[1.2] transition-transform duration-200"
                 >
-                  <a href={data.companyLinkedIn} target="_blank" rel="noopener noreferrer">
-                    
+                  <a href={publisherLinkedIn} target="_blank" rel="noopener noreferrer">
+                    <Linkedin className="h-4 w-4 mr-2" />
                     LinkedIn
                   </a>
                 </Button>
@@ -109,7 +147,6 @@ export function CompanyDetail({ open, onOpenChange, insight, company }: CompanyD
                   className="w-full bg-yellow-400 hover:bg-yellow-400 hover:text-black text-black font-semibold hover:scale-[1.2] transition-transform duration-200"
                 >
                   <a href={data.sourceUrl} target="_blank" rel="noopener noreferrer">
-                    
                     Read Full Article
                   </a>
                 </Button>
