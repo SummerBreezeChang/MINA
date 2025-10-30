@@ -215,10 +215,9 @@ export function SignalTabs({ insights }: SignalTabsProps) {
               className="p-4 rounded-lg border border-primary/20 bg-background/50 backdrop-blur-sm hover:border-primary/40 transition-all cursor-pointer hover:shadow-lg hover:scale-105"
             >
               <div className="flex items-start gap-2 mb-3">
-                <h3 className="font-semibold text-foreground">{insight.companyName}</h3>
+                <h3 className="font-semibold text-foreground line-clamp-3">{insight.headline}</h3>
               </div>
               <p className="text-sm font-medium text-yellow-500 mb-2">{insight.category}</p>
-              <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{insight.headline}</p>
               <p className="text-xs text-muted-foreground">{insight.source}</p>
             </div>
           ))}
